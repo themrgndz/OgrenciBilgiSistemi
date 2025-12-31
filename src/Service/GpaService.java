@@ -7,70 +7,67 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Öğrencilerin dersleri ve notları üzerinden
- * GPA (Genel Not Ortalaması) hesaplamalarını yöneten servis sınıfıdır.
- * <p>
- * Öğrenci–Ders–Not ilişkisi domain modelini şişirmemek adına
- * bu servis içerisinde tutulmaktadır.
- * </p>
+ * Öğrencilerin dersleri ve harf notları üzerinden
+ * AKTS ağırlıklı GPA (Genel Not Ortalaması) hesaplamalarını yöneten servis sınıfıdır. [cite: 54, 60]
  */
 public class GpaService {
 
     /**
-     * Öğrenci, ders ve not bilgisini birlikte tutan iç sınıftır.
-     * Bu sınıf sadece GpaService tarafından kullanılmak üzere tasarlanmıştır.
+     * Öğrenci, ders ve harf notu bilgisini birlikte tutan iç sınıftır.
      */
     private static class NotKaydi {
-        /** Notun ait olduğu öğrenci */
         Ogrenci ogrenci;
-
-        /** Notun ait olduğu ders */
         Ders ders;
+        String harfNotu;
 
-        /** Öğrencinin dersten aldığı not (0-100) */
-        int not;
-
-        /**
-         * NotKaydi nesnesini oluşturur.
-         *
-         * @param ogrenci Notun ait olduğu öğrenci
-         * @param ders Notun ait olduğu ders
-         * @param not Öğrencinin aldığı not
-         */
-        NotKaydi(Ogrenci ogrenci, Ders ders, int not) {
+        NotKaydi(Ogrenci ogrenci, Ders ders, String harfNotu) {
             this.ogrenci = ogrenci;
             this.ders = ders;
-            this.not = not;
+            this.harfNotu = harfNotu;
         }
     }
 
-    /**
-     * Sistemdeki tüm not kayıtlarını tutan liste.
-     */
     private List<NotKaydi> notlar;
 
-    /**
-     * GpaService nesnesini oluşturur ve not kayıt listesini başlatır.
-     */
     public GpaService() {
         this.notlar = new ArrayList<>();
     }
 
     /**
-     * Bir öğrenciye belirli bir ders için not ekler.
-     * Aynı öğrenci ve ders için birden fazla kayıt eklenmesine izin verilmez.
+     * Harf notunun sayısal katsayı karşılığını döndürür. [cite: 35, 36, 43]
      *
-     * @param ogrenci Not eklenecek öğrenci
-     * @param ders Notun ait olduğu ders
-     * @param not Öğrencinin aldığı not (0-100)
-     * @return Not başarıyla eklenirse true, aksi halde false döner
+     * @param harfNotu AA, BA, BB vb. gibi harf notu
+     * @return Harf notunun sayısal karşılığı (4.00, 3.50 vb.), geçersizse -1.0
      */
-    public boolean notEkle(Ogrenci ogrenci, Ders ders, int not) {
-        if (ogrenci == null || ders == null) {
-            return false;
-        }
+    public double harfNotuKarsiligi(String harfNotu) {
+        if (harfNotu == null) return -1.0;
 
-        if (not < 0 || not > 100) {
+        switch (harfNotu.toUpperCase().trim()) {
+            case "AA": return 4.00;
+            case "BA": return 3.50;
+            case "BB": return 3.25;
+            case "CB": return 3.00;
+            case "CC": return 2.50;
+            case "DC": return 2.25;
+            case "DD": return 2.00;
+            case "FD": return 1.50;
+            case "FF": return 0.00;
+            default: return -1.0;
+        }
+    }
+
+    /**
+     * Bir öğrenciye belirli bir ders için harf notu ekler. [cite: 34, 53]
+     *
+     * @param ogrenci  Not eklenecek öğrenci
+     * @param ders     Notun ait olduğu ders
+     * @param harfNotu AA, BA gibi harf notu girişi
+     * @return İşlem başarılıysa true
+     */
+    public boolean notEkle(Ogrenci ogrenci, Ders ders, String harfNotu) {
+        double katsayi = harfNotuKarsiligi(harfNotu);
+
+        if (ogrenci == null || ders == null || katsayi == -1.0) {
             return false;
         }
 
@@ -78,43 +75,23 @@ public class GpaService {
             return false;
         }
 
-        notlar.add(new NotKaydi(ogrenci, ders, not));
+        notlar.add(new NotKaydi(ogrenci, ders, harfNotu.toUpperCase().trim()));
         return true;
     }
 
     /**
-     * Belirli bir öğrencinin, belirli bir dersten aldığı notu bulur.
-     *
-     * @param ogrenci Notu aranacak öğrenci
-     * @param ders Notu aranacak ders
-     * @return Not bulunursa Integer olarak döner, bulunamazsa null döner
+     * Mevcut bir not kaydını yeni bir harf notuyla günceller.
      */
-    public Integer notBul(Ogrenci ogrenci, Ders ders) {
-        for (NotKaydi kayit : notlar) {
-            if (kayit.ogrenci.equals(ogrenci) &&
-                    kayit.ders.equals(ders)) {
-                return kayit.not;
-            }
-        }
-        return null;
-    }
+    public boolean notGuncelle(Ogrenci ogrenci, Ders ders, String yeniHarfNotu) {
+        double katsayi = harfNotuKarsiligi(yeniHarfNotu);
 
-    /**
-     * Var olan bir not kaydını günceller.
-     *
-     * @param ogrenci Notu güncellenecek öğrenci
-     * @param ders    Notu güncellenecek ders
-     * @param yeniNot Yeni not değeri (0-100)
-     * @return Güncelleme başarılıysa true, kayıt bulunamazsa veya not geçersizse false döner
-     */
-    public boolean notGuncelle(Ogrenci ogrenci, Ders ders, int yeniNot) {
-        if (ogrenci == null || ders == null || yeniNot < 0 || yeniNot > 100) {
+        if (ogrenci == null || ders == null || katsayi == -1.0) {
             return false;
         }
 
         for (NotKaydi kayit : notlar) {
             if (kayit.ogrenci.equals(ogrenci) && kayit.ders.equals(ders)) {
-                kayit.not = yeniNot;
+                kayit.harfNotu = yeniHarfNotu.toUpperCase().trim();
                 return true;
             }
         }
@@ -122,21 +99,23 @@ public class GpaService {
     }
 
     /**
-     * Verilen öğrencinin GPA (Genel Not Ortalaması) değerini hesaplar.
-     * Hesaplama AKTS ağırlıklı olarak yapılır.
+     * Öğrencinin harf notlarının sayısal katsayıları ve ders AKTS'leri üzerinden
+     * ağırlıklı genel not ortalamasını hesaplar. [cite: 54, 56]
      *
-     * @param ogrenci GPA değeri hesaplanacak öğrenciW
-     * @return Öğrencinin GPA değeri
+     * @param ogrenci GPA hesaplanacak öğrenci
+     * @return Hesaplanan GPA değeri
      */
     public double gpaHesapla(Ogrenci ogrenci) {
         int toplamAKTS = 0;
-        int agirlikliToplam = 0;
+        double agirlikliToplam = 0;
 
         for (NotKaydi kayit : notlar) {
             if (kayit.ogrenci.equals(ogrenci)) {
-                int akts = kayit.ders.getAkts();
+                int akts = kayit.ders.getAkts(); // [cite: 32]
+                double katsayi = harfNotuKarsiligi(kayit.harfNotu); //
+
                 toplamAKTS += akts;
-                agirlikliToplam += kayit.not * akts;
+                agirlikliToplam += katsayi * akts; //
             }
         }
 
@@ -144,38 +123,34 @@ public class GpaService {
             return 0.0;
         }
 
-        return (double) agirlikliToplam / toplamAKTS;
+        return agirlikliToplam / toplamAKTS;
     }
 
     /**
-     * Bir öğrencinin aldığı tüm dersleri listeler.
-     *
-     * @param ogrenci Dersleri listelenecek öğrenci
-     * @return Öğrencinin aldığı derslerin listesi
+     * Bir öğrencinin dersten aldığı harf notunu döndürür.
      */
+    public String harfNotuBul(Ogrenci ogrenci, Ders ders) {
+        for (NotKaydi kayit : notlar) {
+            if (kayit.ogrenci.equals(ogrenci) && kayit.ders.equals(ders)) {
+                return kayit.harfNotu;
+            }
+        }
+        return null;
+    }
+
     public List<Ders> ogrencininDersleri(Ogrenci ogrenci) {
         List<Ders> dersler = new ArrayList<>();
-
         for (NotKaydi kayit : notlar) {
             if (kayit.ogrenci.equals(ogrenci)) {
                 dersler.add(kayit.ders);
             }
         }
-
         return dersler;
     }
 
-    /**
-     * Belirli bir öğrenci ve ders için daha önce not kaydı olup olmadığını kontrol eder.
-     *
-     * @param ogrenci Kontrol edilecek öğrenci
-     * @param ders Kontrol edilecek ders
-     * @return Kayıt varsa true, yoksa false döner
-     */
     private boolean kayitVarMi(Ogrenci ogrenci, Ders ders) {
         for (NotKaydi kayit : notlar) {
-            if (kayit.ogrenci.equals(ogrenci) &&
-                    kayit.ders.equals(ders)) {
+            if (kayit.ogrenci.equals(ogrenci) && kayit.ders.equals(ders)) {
                 return true;
             }
         }
