@@ -13,7 +13,7 @@ public class InputUtil {
      * Kullanıcıdan String türünde veri okur.
      *
      * @param message kullanıcıya gösterilecek mesaj
-     * @return Kullanıcının girdiği metin (trim edilmiş)
+     * @return Kullanıcının girdiği metin
      */
     public static String readString(String message) {
         System.out.print(message);

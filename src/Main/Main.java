@@ -19,18 +19,14 @@ public class Main {
      * <p>
      * Servis katmanlarını başlatır ve AnaMenu'yi çalıştırır.
      * </p>
-     *
-     * @param args Komut satırı argümanları (kullanılmıyor)
      */
     public static void main(String[] args) {
 
-        // Service katmanı oluşturuluyor
         OgrenciService ogrenciService = new OgrenciService();
         DersService dersService = new DersService();
         BolumService bolumService = new BolumService();
         GpaService gpaService = new GpaService();
 
-        // Ana menü başlatılıyor
         AnaMenu anaMenu = new AnaMenu(
                 ogrenciService,
                 dersService,

@@ -32,7 +32,9 @@ public class OgrenciService {
      * @return Öğrenci başarıyla eklenirse true, aksi halde false döner
      */
     public boolean ogrenciEkle(Ogrenci ogrenci) {
-        if (ogrenci == null) {
+        if (ogrenci == null ||
+                ogrenci.getIsim() == null || ogrenci.getIsim().trim().isEmpty() ||
+                ogrenci.getSoyisim() == null || ogrenci.getSoyisim().trim().isEmpty()) {
             return false;
         }
 

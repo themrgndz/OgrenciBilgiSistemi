@@ -100,10 +100,32 @@ public class GpaService {
     }
 
     /**
+     * Var olan bir not kaydını günceller.
+     *
+     * @param ogrenci Notu güncellenecek öğrenci
+     * @param ders    Notu güncellenecek ders
+     * @param yeniNot Yeni not değeri (0-100)
+     * @return Güncelleme başarılıysa true, kayıt bulunamazsa veya not geçersizse false döner
+     */
+    public boolean notGuncelle(Ogrenci ogrenci, Ders ders, int yeniNot) {
+        if (ogrenci == null || ders == null || yeniNot < 0 || yeniNot > 100) {
+            return false;
+        }
+
+        for (NotKaydi kayit : notlar) {
+            if (kayit.ogrenci.equals(ogrenci) && kayit.ders.equals(ders)) {
+                kayit.not = yeniNot;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Verilen öğrencinin GPA (Genel Not Ortalaması) değerini hesaplar.
      * Hesaplama AKTS ağırlıklı olarak yapılır.
      *
-     * @param ogrenci GPA değeri hesaplanacak öğrenci
+     * @param ogrenci GPA değeri hesaplanacak öğrenciW
      * @return Öğrencinin GPA değeri
      */
     public double gpaHesapla(Ogrenci ogrenci) {

@@ -61,14 +61,18 @@ public class GpaMenu {
                         notEkle();
                         break;
                     case 2:
-                        notGoruntule();
+                        notGuncelle();
                         break;
                     case 3:
-                        gpaHesapla();
+                        notGoruntule();
                         break;
                     case 4:
+                        gpaHesapla();
+                        break;
+                    case 5:
                         ogrencininDersleriniListele();
                         break;
+
                     default:
                         System.out.println("Geçersiz seçim!");
                 }
@@ -88,9 +92,10 @@ public class GpaMenu {
         System.out.println("|           NOT / GPA İŞLEMLERİ          |");
         System.out.println("+---------------------------------------+");
         System.out.println("|   1 - Not Ekle                         |");
-        System.out.println("|   2 - Not Görüntüle                    |");
-        System.out.println("|   3 - GPA Hesapla                       |");
-        System.out.println("|   4 - Öğrencinin Aldığı Dersler        |");
+        System.out.println("|   2 - Not Güncelle                     |");
+        System.out.println("|   3 - Not Görüntüle                    |");
+        System.out.println("|   4 - GPA Hesapla                       |");
+        System.out.println("|   5 - Öğrencinin Aldığı Dersler        |");
         System.out.println("+---------------------------------------+");
         System.out.println("|   geri - Ana Menüye Dön               |");
         System.out.println("+---------------------------------------+");
@@ -145,6 +150,32 @@ public class GpaMenu {
             System.out.println("Not: " + not);
         } else {
             System.out.println("Kayıt bulunamadı.");
+        }
+    }
+
+    /**
+     * Kullanıcıdan öğrenci, ders ve yeni not bilgisini alarak güncelleme yapar.
+     */
+    private void notGuncelle() {
+        int ogrNo = InputUtil.readInt("Öğrenci No: ");
+        Ogrenci ogrenci = ogrenciService.ogrenciAra(ogrNo);
+        if (ogrenci == null) {
+            System.out.println("Öğrenci bulunamadı.");
+            return;
+        }
+
+        String dersKodu = InputUtil.readString("Ders Kodu: ");
+        Ders ders = dersService.dersAra(dersKodu);
+        if (ders == null) {
+            System.out.println("Ders bulunamadı.");
+            return;
+        }
+
+        int yeniNot = InputUtil.readInt("Yeni Not (0-100): ");
+        if (gpaService.notGuncelle(ogrenci, ders, yeniNot)) {
+            System.out.println("Not başarıyla güncellendi.");
+        } else {
+            System.out.println("Not güncellenemedi (Kayıt bulunamadı veya geçersiz not).");
         }
     }
 

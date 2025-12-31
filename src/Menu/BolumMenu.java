@@ -104,7 +104,7 @@ public class BolumMenu {
         if (bolumService.bolumEkle(bolum)) {
             System.out.println("Bölüm başarıyla eklendi.");
         } else {
-            System.out.println("Bölüm eklenemedi (zaten mevcut olabilir).");
+            System.out.println("Bölüm eklenemedi.");
         }
     }
 

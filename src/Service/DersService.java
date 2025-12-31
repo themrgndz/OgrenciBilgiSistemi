@@ -31,7 +31,9 @@ public class DersService {
      * @return Ders başarıyla eklenirse true, aksi halde false döner
      */
     public boolean dersEkle(Ders ders) {
-        if (ders == null) {
+        if (ders == null ||
+                ders.getAd() == null || ders.getAd().trim().isEmpty() ||
+                ders.getKod() == null || ders.getKod().trim().isEmpty()) {
             return false;
         }
 

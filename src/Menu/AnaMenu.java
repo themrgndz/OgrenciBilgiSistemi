@@ -30,11 +30,7 @@ public class AnaMenu {
      * @param bolumService   Bölüm işlemlerini yöneten servis.
      * @param gpaService     Not/GPA işlemlerini yöneten servis.
      */
-    public AnaMenu(OgrenciService ogrenciService,
-                   DersService dersService,
-                   BolumService bolumService,
-                   GpaService gpaService) {
-
+    public AnaMenu(OgrenciService ogrenciService, DersService dersService, BolumService bolumService, GpaService gpaService) {
         this.ogrenciService = ogrenciService;
         this.dersService = dersService;
         this.bolumService = bolumService;

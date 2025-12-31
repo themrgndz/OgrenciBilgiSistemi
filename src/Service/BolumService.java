@@ -32,7 +32,7 @@ public class BolumService {
      * @return Bölüm başarıyla eklenirse true, aksi halde false döner
      */
     public boolean bolumEkle(Bolum bolum) {
-        if (bolum == null) {
+        if (bolum == null || bolum.getAd() == null || bolum.getAd().trim().isEmpty()) {
             return false;
         }
 
@@ -112,7 +112,6 @@ public class BolumService {
         }
 
         eskiBolum.setWebSayfasi(bolum.getWebSayfasi());
-        // kuruluş tarihi değişmez kabul edildi
         return true;
     }
 }
