@@ -6,8 +6,22 @@ import Service.DersService;
 import Service.GpaService;
 import Service.OgrenciService;
 
+/**
+ * Programın giriş noktası (main sınıfı).
+ * <p>
+ * Bu sınıf çalıştırıldığında servis katmanları oluşturulur ve AnaMenu başlatılır. Kullanıcı, AnaMenu üzerinden Bölüm, Öğrenci, Ders ve Not/GPA işlemlerine erişebilir.
+ * </p>
+ */
 public class Main {
 
+    /**
+     * Programın başlangıç metodu.
+     * <p>
+     * Servis katmanlarını başlatır ve AnaMenu'yi çalıştırır.
+     * </p>
+     *
+     * @param args Komut satırı argümanları (kullanılmıyor)
+     */
     public static void main(String[] args) {
 
         // Service katmanı oluşturuluyor
