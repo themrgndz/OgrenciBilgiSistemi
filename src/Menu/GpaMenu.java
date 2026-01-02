@@ -93,24 +93,33 @@ public class GpaMenu {
 
     private void notEkle() {
         int ogrNo = InputUtil.readInt("Öğrenci No: ");
-        Ogrenci ogrenci = ogrenciService.ogrenciAra(ogrNo);
+        Ogrenci ogrenci = ogrenciService.ogrenciAra(ogrNo); //
+
         if (ogrenci == null) {
             System.out.println("Öğrenci bulunamadı.");
             return;
         }
 
-        String dersKodu = InputUtil.readString("Ders Kodu: ");
-        Ders ders = dersService.dersAra(dersKodu);
-        if (ders == null) {
-            System.out.println("Ders bulunamadı.");
-            return;
-        }
+        boolean devamEt = true;
+        while (devamEt) {
+            System.out.println("\n--- Not Girişi (" + ogrenci.getIsim() + " " + ogrenci.getSoyisim() + ") ---");
 
-        String harfNotu = InputUtil.readString("Harf Notu (AA, BA, BB...): ");
-        if (gpaService.notEkle(ogrenci, ders, harfNotu)) {
-            System.out.println("Harf notu başarıyla eklendi.");
-        } else {
-            System.out.println("Not eklenemedi (Geçersiz harf notu veya kayıt zaten mevcut).");
+            String dersKodu = InputUtil.readString("Ders Kodu: ");
+            Ders ders = dersService.dersAra(dersKodu); //
+
+            if (ders == null) {
+                System.out.println("Ders bulunamadı.");
+            } else {
+                String harfNotu = InputUtil.readString("Harf Notu (AA, BA, BB...): ");
+                if (gpaService.notEkle(ogrenci, ders, harfNotu)) { //
+                    System.out.println("Harf notu başarıyla eklendi.");
+                } else {
+                    System.out.println("Not eklenemedi (Geçersiz harf notu veya kayıt zaten mevcut).");
+                }
+            }
+
+            String yanit = InputUtil.readString("\nAynı öğrenci için başka bir not girmek ister misiniz? (E/H): ");
+            devamEt = yanit.equalsIgnoreCase("E");
         }
     }
 

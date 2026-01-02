@@ -11,28 +11,15 @@ import java.util.List;
 
 /**
  * Bölüm işlemleri menüsünü yöneten sınıf.
- * <p>
- * Bu sınıf, bölüm ekleme, silme ve listeleme işlemlerini kullanıcıya sunar.
- * BolumService kullanılarak işlemler gerçekleştirilir.
- * Kullanıcı "geri" yazarak AnaMenu'ye dönebilir.
- * </p>
  */
 public class BolumMenu {
 
     private final BolumService bolumService;
 
-    /**
-     * BolumMenu constructor.
-     *
-     * @param bolumService Bölüm işlemlerini yöneten servis.
-     */
     public BolumMenu(BolumService bolumService) {
         this.bolumService = bolumService;
     }
 
-    /**
-     * Menü döngüsünü başlatır ve kullanıcı etkileşimini yönetir.
-     */
     public void baslat() {
         while (true) {
             menuYazdir();
@@ -67,9 +54,6 @@ public class BolumMenu {
         }
     }
 
-    /**
-     * Menü seçeneklerini ekrana yazdırır.
-     */
     private void menuYazdir() {
         System.out.println("+---------------------------------------+");
         System.out.println("|           BÖLÜM İŞLEMLERİ              |");
@@ -84,8 +68,13 @@ public class BolumMenu {
 
     /**
      * Kullanıcıdan bölüm bilgisi alarak yeni bölüm ekler.
+     * Kuruluş tarihi için format ve mantıklılık kontrolü yapar.
      */
     private void bolumEkle() {
+        // Yeni bir bölüm eklemeden önce mevcut bölümleri gösteriyoruz
+        System.out.println("\n--- Mevcut Bölümler ---");
+        bolumListele();
+
         String ad = InputUtil.readString("Bölüm adı: ");
         String web = InputUtil.readString("Web sayfası: ");
 
@@ -93,10 +82,15 @@ public class BolumMenu {
         while (true) {
             String tarihStr = InputUtil.readString("Kuruluş tarihi (gg.aa.yyyy): ");
             tarih = DateUtil.parseDate(tarihStr);
-            if (tarih != null) {
+
+            // Tarih kontrolü: Hem formatın doğru olması hem de tarihin mantıklı (gelecek olmaması vb.) olması gerekir
+            if (tarih != null && DateUtil.isMantikliTarih(tarih)) {
                 break;
+            } else if (tarih == null) {
+                System.out.println("Tarih formatı hatalı!");
+            } else {
+                System.out.println("Geçersiz tarih! Gelecek bir tarih veya çok eski bir tarih giremezsiniz.");
             }
-            System.out.println("Tarih formatı hatalı!");
         }
 
         Bolum bolum = new Bolum(ad, web, tarih);
@@ -104,13 +98,10 @@ public class BolumMenu {
         if (bolumService.bolumEkle(bolum)) {
             System.out.println("Bölüm başarıyla eklendi.");
         } else {
-            System.out.println("Bölüm eklenemedi.");
+            System.out.println("Bölüm eklenemedi (İsim boş veya zaten mevcut olabilir).");
         }
     }
 
-    /**
-     * Kullanıcıdan bölüm adı alarak bölümü siler.
-     */
     private void bolumSil() {
         String ad = InputUtil.readString("Silinecek bölüm adı: ");
 
@@ -121,9 +112,6 @@ public class BolumMenu {
         }
     }
 
-    /**
-     * Sistemde kayıtlı tüm bölümleri listeler.
-     */
     private void bolumListele() {
         List<Bolum> bolumler = bolumService.bolumListele();
 
@@ -136,7 +124,7 @@ public class BolumMenu {
         for (Bolum bolum : bolumler) {
             System.out.println("Bölüm Adı      : " + bolum.getAd());
             System.out.println("Web Sayfası   : " + bolum.getWebSayfasi());
-            System.out.println("Kuruluş Tarihi: " + bolum.getKuruluşTarihi());
+            System.out.println("Kuruluş Tarihi: " + DateUtil.formatDate(bolum.getKuruluşTarihi()));
             ConsoleUtil.printLine();
         }
     }

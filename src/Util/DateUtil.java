@@ -22,7 +22,13 @@ public class DateUtil {
             return null;
         }
     }
-
+    public static boolean isMantikliTarih(LocalDate date) {
+        if (date == null) return false;
+        LocalDate bugun = LocalDate.now();
+        LocalDate altSinir = LocalDate.of(1900, 1, 1);
+        // Tarih bugünden sonra olamaz ve 1900'den önce olamaz
+        return !date.isAfter(bugun) && !date.isBefore(altSinir);
+    }
     /**
      * Verilen LocalDate nesnesini belirlenen formatta String olarak döndürür.
      */

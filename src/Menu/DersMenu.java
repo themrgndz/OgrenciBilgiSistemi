@@ -84,16 +84,22 @@ public class DersMenu {
      * Kullanıcıdan ders bilgisi alarak yeni ders ekler.
      */
     private void dersEkle() {
-        String ad = InputUtil.readString("Ders Adı: ");
-        String kod = InputUtil.readString("Ders Kodu: ");
-        int akts = InputUtil.readInt("AKTS: ");
+        boolean devamEt = true;
+        while (devamEt) {
+            String ad = InputUtil.readString("Ders Adı: ");
+            String kod = InputUtil.readString("Ders Kodu: ");
+            int akts = InputUtil.readInt("AKTS: ");
 
-        Ders ders = new Ders(ad, kod, akts);
+            Ders ders = new Ders(ad, kod, akts);
 
-        if (dersService.dersEkle(ders)) {
-            System.out.println("Ders başarıyla eklendi.");
-        } else {
-            System.out.println("Ders eklenemedi (zaten mevcut olabilir).");
+            if (dersService.dersEkle(ders)) {
+                System.out.println("Ders başarıyla eklendi.");
+            } else {
+                System.out.println("Ders eklenemedi.");
+            }
+
+            String yanit = InputUtil.readString("Yeni bir ders eklemek ister misiniz? (E/H): ");
+            devamEt = yanit.equalsIgnoreCase("E");
         }
     }
 

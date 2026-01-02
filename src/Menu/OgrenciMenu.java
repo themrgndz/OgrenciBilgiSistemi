@@ -16,7 +16,6 @@ import java.util.List;
  * <p>
  * Bu sınıf, öğrencilerle ilgili CRUD işlemlerini kullanıcıya sunar ve OgrenciService ile BolumService'i kullanır.
  * Menü üzerinden ekleme, silme, arama ve listeleme işlemleri yapılabilir.
- * Kullanıcı "geri" yazarak AnaMenu'ye dönebilir.
  * </p>
  */
 public class OgrenciMenu {
@@ -93,35 +92,57 @@ public class OgrenciMenu {
 
     /**
      * Kullanıcıdan veri alarak yeni öğrenci ekler.
-     * Bölüm kontrolü ve tarih formatı kontrolü içerir.
+     * Gelecek tarih kontrolü, mevcut bölümleri listeleme ve
+     * işlem sonunda yeni kayıt ekleme döngüsü özelliklerini içerir.
      */
     private void ogrenciEkle() {
-        String isim = InputUtil.readString("İsim: ");
-        String soyisim = InputUtil.readString("Soyisim: ");
-        int no = InputUtil.readInt("Öğrenci No: ");
+        boolean devamEt = true;
 
-        Bolum bolum;
-        while (true) {
-            String bolumAdi = InputUtil.readString("Bölüm Adı: ");
-            bolum = bolumService.bolumAra(bolumAdi);
-            if (bolum != null) break;
-            System.out.println("Bölüm bulunamadı!");
-        }
+        while (devamEt) {
 
-        LocalDate tarih;
-        while (true) {
-            String tarihStr = InputUtil.readString("Doğum Tarihi (gg.aa.yyyy): ");
-            tarih = DateUtil.parseDate(tarihStr);
-            if (tarih != null) break;
-            System.out.println("Tarih formatı hatalı!");
-        }
+            String isim = InputUtil.readString("İsim: ");
+            String soyisim = InputUtil.readString("Soyisim: ");
+            int no = InputUtil.readInt("Öğrenci No: ");
 
-        Ogrenci ogrenci = new Ogrenci(isim, soyisim, no, tarih, bolum);
+            // Önce mevcut bölümleri listeliyoruz
+            System.out.println("--- Kayıt Yapılabilecek Bölümler ---");
+            List<Bolum> bolumler = bolumService.bolumListele();
+            if (bolumler.isEmpty()) {
+                System.out.println("Sistemde kayıtlı bölüm yok! Önce bölüm eklemelisiniz.");
+                return;
+            }
+            bolumler.forEach(b -> System.out.println("- " + b.getAd()));
 
-        if (ogrenciService.ogrenciEkle(ogrenci)) {
-            System.out.println("Öğrenci başarıyla eklendi.");
-        } else {
-            System.out.println("Öğrenci eklenemedi (zaten mevcut olabilir).");
+            Bolum bolum;
+            while (true) {
+                String bolumAdi = InputUtil.readString("Bölüm Adı: ");
+                bolum = bolumService.bolumAra(bolumAdi);
+                if (bolum != null) break;
+                System.out.println("Bölüm bulunamadı! Lütfen listedeki bölümlerden birini yazın.");
+            }
+
+            LocalDate tarih;
+            while (true) {
+                String tarihStr = InputUtil.readString("Doğum Tarihi (gg.aa.yyyy): ");
+                tarih = DateUtil.parseDate(tarihStr);
+                if (tarih != null && DateUtil.isMantikliTarih(tarih)) {
+                    break;
+                } else if (tarih == null) {
+                    System.out.println("Tarih formatı hatalı!");
+                } else {
+                    System.out.println("Geçersiz tarih! Gelecek bir tarih veya çok eski bir tarih giremezsiniz.");
+                }
+            }
+
+            Ogrenci ogrenci = new Ogrenci(isim, soyisim, no, tarih, bolum);
+
+            if (ogrenciService.ogrenciEkle(ogrenci)) {
+                System.out.println("Öğrenci başarıyla eklendi.");
+            } else {
+                System.out.println("Öğrenci eklenemedi (zaten mevcut olabilir).");
+            }
+            String yanit = InputUtil.readString("Yeni bir öğrenci daha eklemek ister misiniz? (E/H): ");
+            devamEt = yanit.equalsIgnoreCase("E");
         }
     }
 
@@ -151,7 +172,7 @@ public class OgrenciMenu {
             System.out.println("İsim     : " + ogrenci.getIsim());
             System.out.println("Soyisim  : " + ogrenci.getSoyisim());
             System.out.println("Öğrenci No: " + ogrenci.getOgrenciNo());
-            System.out.println("Doğum    : " + ogrenci.getDogumTarihi());
+            System.out.println("Doğum    : " + DateUtil.formatDate(ogrenci.getDogumTarihi()));
             System.out.println("Bölüm    : " + ogrenci.getBolum().getAd());
             ConsoleUtil.printLine();
         } else {
@@ -175,7 +196,7 @@ public class OgrenciMenu {
             System.out.println("İsim     : " + ogrenci.getIsim());
             System.out.println("Soyisim  : " + ogrenci.getSoyisim());
             System.out.println("Öğrenci No: " + ogrenci.getOgrenciNo());
-            System.out.println("Doğum    : " + ogrenci.getDogumTarihi());
+            System.out.println("Doğum    : " + DateUtil.formatDate(ogrenci.getDogumTarihi()));
             System.out.println("Bölüm    : " + ogrenci.getBolum().getAd());
             ConsoleUtil.printLine();
         }
