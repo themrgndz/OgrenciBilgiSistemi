@@ -14,8 +14,7 @@ import java.util.List;
 /**
  * Öğrenci menüsünü yöneten sınıf.
  * <p>
- * Bu sınıf, öğrencilerle ilgili CRUD işlemlerini kullanıcıya sunar ve OgrenciService ile BolumService'i kullanır.
- * Menü üzerinden ekleme, silme, arama ve listeleme işlemleri yapılabilir.
+ * Öğrencilerle ilgili CRUD işlemlerini sunar. Bölüm seçimi numaralandırılmış liste üzerinden yapılır.
  * </p>
  */
 public class OgrenciMenu {
@@ -23,20 +22,11 @@ public class OgrenciMenu {
     private final OgrenciService ogrenciService;
     private final BolumService bolumService;
 
-    /**
-     * OgrenciMenu constructor.
-     *
-     * @param ogrenciService Öğrenci işlemlerini yöneten servis.
-     * @param bolumService   Bölüm işlemlerini yöneten servis.
-     */
     public OgrenciMenu(OgrenciService ogrenciService, BolumService bolumService) {
         this.ogrenciService = ogrenciService;
         this.bolumService = bolumService;
     }
 
-    /**
-     * Menü döngüsünü başlatır ve kullanıcı etkileşimini yönetir.
-     */
     public void baslat() {
         while (true) {
             menuYazdir();
@@ -74,9 +64,6 @@ public class OgrenciMenu {
         }
     }
 
-    /**
-     * Menü seçeneklerini ekrana yazdırır.
-     */
     private void menuYazdir() {
         System.out.println("+---------------------------------------+");
         System.out.println("|           ÖĞRENCİ İŞLEMLERİ           |");
@@ -91,40 +78,47 @@ public class OgrenciMenu {
     }
 
     /**
-     * Kullanıcıdan veri alarak yeni öğrenci ekler.
-     * Gelecek tarih kontrolü, mevcut bölümleri listeleme ve
-     * işlem sonunda yeni kayıt ekleme döngüsü özelliklerini içerir.
+     * Numaralandırılmış bölüm seçimi ve tarih kontrolü ile öğrenci ekler.
      */
     private void ogrenciEkle() {
         boolean devamEt = true;
 
         while (devamEt) {
+            System.out.println("\n--- Yeni Öğrenci Kaydı ---");
+
+            // Bölüm Kontrolü
+            List<Bolum> bolumler = bolumService.bolumListele();
+            if (bolumler.isEmpty()) {
+                System.out.println("Sistemde kayıtlı bölüm yok! Önce Bölüm İşlemleri menüsünden bir bölüm eklemelisiniz.");
+                return;
+            }
 
             String isim = InputUtil.readString("İsim: ");
             String soyisim = InputUtil.readString("Soyisim: ");
             int no = InputUtil.readInt("Öğrenci No: ");
 
-            // Önce mevcut bölümleri listeliyoruz
-            System.out.println("--- Kayıt Yapılabilecek Bölümler ---");
-            List<Bolum> bolumler = bolumService.bolumListele();
-            if (bolumler.isEmpty()) {
-                System.out.println("Sistemde kayıtlı bölüm yok! Önce bölüm eklemelisiniz.");
-                return;
-            }
-            bolumler.forEach(b -> System.out.println("- " + b.getAd()));
-
-            Bolum bolum;
-            while (true) {
-                String bolumAdi = InputUtil.readString("Bölüm Adı: ");
-                bolum = bolumService.bolumAra(bolumAdi);
-                if (bolum != null) break;
-                System.out.println("Bölüm bulunamadı! Lütfen listedeki bölümlerden birini yazın.");
+            // Numaralandırılmış Bölüm Seçimi
+            System.out.println("\nLütfen bir bölüm seçiniz:");
+            for (int i = 0; i < bolumler.size(); i++) {
+                System.out.println((i + 1) + " - " + bolumler.get(i).getAd());
             }
 
+            Bolum bolum = null;
+            while (bolum == null) {
+                int secim = InputUtil.readInt("Bölüm No: ");
+                if (secim > 0 && secim <= bolumler.size()) {
+                    bolum = bolumler.get(secim - 1);
+                } else {
+                    System.out.println("Geçersiz seçim! Lütfen listedeki numaralardan birini girin.");
+                }
+            }
+
+            // Tarih Girişi ve Kontrolü
             LocalDate tarih;
             while (true) {
                 String tarihStr = InputUtil.readString("Doğum Tarihi (gg.aa.yyyy): ");
                 tarih = DateUtil.parseDate(tarihStr);
+
                 if (tarih != null && DateUtil.isMantikliTarih(tarih)) {
                     break;
                 } else if (tarih == null) {
@@ -137,21 +131,18 @@ public class OgrenciMenu {
             Ogrenci ogrenci = new Ogrenci(isim, soyisim, no, tarih, bolum);
 
             if (ogrenciService.ogrenciEkle(ogrenci)) {
-                System.out.println("Öğrenci başarıyla eklendi.");
+                System.out.println("Öğrenci (" + bolum.getAd() + " bölümüne) başarıyla eklendi.");
             } else {
-                System.out.println("Öğrenci eklenemedi (zaten mevcut olabilir).");
+                System.out.println("Öğrenci eklenemedi (Numara zaten mevcut olabilir).");
             }
-            String yanit = InputUtil.readString("Yeni bir öğrenci daha eklemek ister misiniz? (E/H): ");
+
+            String yanit = InputUtil.readString("\nYeni bir öğrenci daha eklemek ister misiniz? (E/H): ");
             devamEt = yanit.equalsIgnoreCase("E");
         }
     }
 
-    /**
-     * Kullanıcıdan öğrenci numarası alarak öğrenciyi siler.
-     */
     private void ogrenciSil() {
         int no = InputUtil.readInt("Silinecek öğrenci no: ");
-
         if (ogrenciService.ogrenciSil(no)) {
             System.out.println("Öğrenci silindi.");
         } else {
@@ -159,12 +150,8 @@ public class OgrenciMenu {
         }
     }
 
-    /**
-     * Kullanıcıdan öğrenci numarası alarak öğrenciyi arar ve detaylarını gösterir.
-     */
     private void ogrenciAra() {
         int no = InputUtil.readInt("Aranacak öğrenci no: ");
-
         Ogrenci ogrenci = ogrenciService.ogrenciAra(no);
 
         if (ogrenci != null) {
@@ -180,12 +167,8 @@ public class OgrenciMenu {
         }
     }
 
-    /**
-     * Tüm öğrencileri listeler.
-     */
     private void ogrenciListele() {
         List<Ogrenci> liste = ogrenciService.ogrenciListele();
-
         if (liste.isEmpty()) {
             System.out.println("Kayıtlı öğrenci yok.");
             return;
