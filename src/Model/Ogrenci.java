@@ -3,24 +3,36 @@ package Model;
 import java.time.LocalDate;
 
 /**
- * Ogrenci sınıfı, sistemdeki bir öğrencinin temel bilgilerini temsil eder.
+ * Üniversite bünyesindeki bir öğrenciyi temsil eden temel model sınıfıdır.
+ * <p>
+ * Bu sınıf; öğrencinin kişisel bilgilerini (isim, soyisim, doğum tarihi),
+ * benzersiz öğrenci numarasını ve akademik olarak bağlı olduğu {@link Bolum}
+ * nesnesini saklar.
+ * </p>
+ * @author kral
+ * @version 1.0
  */
 public class Ogrenci {
 
+    /** Öğrencinin adı */
     private String isim;
+    /** Öğrencinin soyadı */
     private String soyisim;
+    /** Öğrencinin benzersiz 9 haneli okul numarası */
     private int ogrenciNo;
+    /** Öğrencinin doğum tarihi (LocalDate formatında) */
     private LocalDate dogumTarihi;
+    /** Öğrencinin kayıtlı olduğu akademik bölüm */
     private Bolum bolum;
 
     /**
-     * Ogrenci nesnesi oluşturur.
+     * Yeni bir Ogrenci nesnesi oluşturur.
      *
-     * @param isim öğrencinin adı
-     * @param soyisim öğrencinin soyadı
-     * @param ogrenciNo öğrencinin numarası
-     * @param dogumTarihi öğrencinin doğum tarihi
-     * @param bolum öğrencinin bağlı olduğu bölüm
+     * @param isim         Öğrencinin adı
+     * @param soyisim      Öğrencinin soyadı
+     * @param ogrenciNo    Öğrencinin benzersiz okul numarası
+     * @param dogumTarihi  Öğrencinin doğum tarihi
+     * @param bolum        Öğrencinin bağlı olduğu bölüm nesnesi
      */
     public Ogrenci(String isim, String soyisim, int ogrenciNo,
                    LocalDate dogumTarihi, Bolum bolum) {
@@ -33,6 +45,7 @@ public class Ogrenci {
 
     /**
      * Öğrencinin adını döndürür.
+     * @return Öğrenci adı
      */
     public String getIsim() {
         return isim;
@@ -41,7 +54,7 @@ public class Ogrenci {
     /**
      * Öğrencinin adını günceller.
      *
-     * @param isim atanmış isim
+     * @param isim Yeni atanacak isim
      */
     public void setIsim(String isim) {
         this.isim = isim;
@@ -49,6 +62,7 @@ public class Ogrenci {
 
     /**
      * Öğrencinin soyadını döndürür.
+     * @return Öğrenci soyadı
      */
     public String getSoyisim() {
         return soyisim;
@@ -57,14 +71,15 @@ public class Ogrenci {
     /**
      * Öğrencinin soyadını günceller.
      *
-     * @param soyisim atanmış soyisim
+     * @param soyisim Yeni atanacak soyisim
      */
     public void setSoyisim(String soyisim) {
         this.soyisim = soyisim;
     }
 
     /**
-     * Öğrencinin bölüm bilgisini döndürür.
+     * Öğrencinin kayıtlı olduğu bölüm bilgisini döndürür.
+     * @return {@link Bolum} nesnesi
      */
     public Bolum getBolum() {
         return bolum;
@@ -72,13 +87,15 @@ public class Ogrenci {
 
     /**
      * Öğrencinin doğum tarihini döndürür.
+     * @return Doğum tarihi (LocalDate)
      */
     public LocalDate getDogumTarihi() {
         return dogumTarihi;
     }
 
     /**
-     * Öğrencinin numarasını döndürür.
+     * Öğrencinin benzersiz okul numarasını döndürür.
+     * @return Öğrenci numarası
      */
     public int getOgrenciNo() {
         return ogrenciNo;

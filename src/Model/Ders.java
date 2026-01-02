@@ -1,20 +1,30 @@
 package Model;
 
 /**
- * Ders sınıfı, üniversitede verilen bir dersin temel bilgilerini temsil eder.
+ * Üniversite bünyesinde verilen bir dersi temsil eden model sınıfıdır.
+ * <p>
+ * Bu sınıf; dersin adı, benzersiz ders kodu ve AKTS (Avrupa Kredi Transfer Sistemi)
+ * değerini saklar. Sistemdeki not hesaplamaları bu sınıftaki AKTS değerleri
+ * üzerinden gerçekleştirilir.
+ * </p>
+ * @author kral
+ * @version 1.0
  */
 public class Ders {
 
+    /** Dersin tam adı (Örn: Nesne Yönelimli Programlama) */
     private String ad;
+    /** Dersin benzersiz kodu (Örn: NYP101) */
     private String kod;
+    /** Dersin AKTS kredi değeri */
     private int akts;
 
     /**
-     * Ders nesnesi oluşturur.
+     * Yeni bir Ders nesnesi oluşturur.
      *
-     * @param ad dersin adı
-     * @param kod dersin kodu (örn: Java445)
-     * @param akts dersin AKTS değeri
+     * @param ad   Dersin adı
+     * @param kod  Dersin benzersiz kodu (örn: Java445)
+     * @param akts Dersin AKTS kredi değeri
      */
     public Ders(String ad, String kod, int akts){
         this.ad = ad;
@@ -24,6 +34,7 @@ public class Ders {
 
     /**
      * Dersin adını döndürür.
+     * @return Ders adı
      */
     public String getAd() {
         return ad;
@@ -32,7 +43,7 @@ public class Ders {
     /**
      * Dersin adını günceller.
      *
-     * @param ad atanmış ders adı
+     * @param ad Atanacak yeni ders adı
      */
     public void setAd(String ad) {
         this.ad = ad;
@@ -40,13 +51,15 @@ public class Ders {
 
     /**
      * Dersin kodunu döndürür.
+     * @return Ders kodu
      */
     public String getKod() {
         return kod;
     }
 
     /**
-     * Dersin akts değerini döndürür.
+     * Dersin AKTS kredi değerini döndürür.
+     * @return AKTS değeri
      */
     public int getAkts() {
         return akts;

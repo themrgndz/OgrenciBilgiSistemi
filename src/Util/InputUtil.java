@@ -3,29 +3,47 @@ package Util;
 import java.util.Scanner;
 
 /**
- * InputUtil sınıfı, konsol uygulamalarında kullanıcıdan güvenli veri almayı sağlamak için kullanılır.
+ * Konsol uygulamalarında kullanıcıdan güvenli veri almayı sağlayan yardımcı sınıftır.
+ * <p>
+ * Bu sınıf; metin girişi, sayısal giriş ve sadece harf içeren özel giriş türleri için
+ * hata kontrolleri (validation) barındırır. Hatalı giriş durumunda kullanıcıyı
+ * bilgilendirerek doğru veriyi alana kadar döngüye girer.
+ * </p>
+ * @author kral
+ * @version 1.0
  */
 public class InputUtil {
 
+    /** Konsol girişlerini okumak için kullanılan Scanner nesnesi */
     private static final Scanner scanner = new Scanner(System.in);
 
     /**
-     * Kullanıcıdan String türünde veri okur.
+     * Kullanıcıdan herhangi bir metin girişi alır.
      *
-     * @param message kullanıcıya gösterilecek mesaj
-     * @return Kullanıcının girdiği metin
+     * @param message Kullanıcıya gösterilecek yönlendirme mesajı.
+     * @return Girilen metnin boşlukları temizlenmiş (trimmed) hali.
      */
     public static String readString(String message) {
         System.out.print(message);
         return scanner.nextLine().trim();
     }
+
+    /**
+     * Kullanıcıdan sadece harf ve boşluk içeren, en az 2 karakterli metin girişi alır.
+     * <p>
+     * İsim ve soyisim gibi sadece alfabetik karakterlerin beklendiği alanlar için
+     * Regex (Düzenli İfadeler) kullanarak doğrulama yapar.
+     * </p>
+     *
+     * @param message Kullanıcıya gösterilecek yönlendirme mesajı.
+     * @return Doğrulanmış alfabetik metin.
+     */
     public static String readOnlyText(String message) {
         while (true) {
             System.out.print(message);
             String input = scanner.nextLine().trim();
 
             // Regex: En az 2 karakter olmalı ve sadece harf/boşluk içermeli
-            // \\p{L} tüm dillerdeki harfleri kapsar
             if (input.length() >= 2 && input.matches("^[\\p{L} ]+$")) {
                 return input;
             } else {
@@ -33,12 +51,16 @@ public class InputUtil {
             }
         }
     }
+
     /**
-     * Kullanıcıdan int türünde veri okur.
-     * Geçersiz girişlerde kullanıcıdan tekrar giriş istenir.
+     * Kullanıcıdan tam sayı (int) türünde veri okur.
+     * <p>
+     * Kullanıcı sayısal olmayan bir değer girerse {@link NumberFormatException} yakalanır
+     * ve geçerli bir sayı girilene kadar işlem tekrarlanır.
+     * </p>
      *
-     * @param message kullanıcıya gösterilecek mesaj
-     * @return Girilen geçerli tam sayı
+     * @param message Kullanıcıya gösterilecek yönlendirme mesajı.
+     * @return Girilen geçerli tam sayı değeri.
      */
     public static int readInt(String message) {
         while (true) {
@@ -46,7 +68,7 @@ public class InputUtil {
                 System.out.print(message);
                 return Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
-                System.out.println("Lütfen geçerli bir sayı giriniz.");
+                System.out.println("Hata: Lütfen geçerli bir tam sayı giriniz.");
             }
         }
     }

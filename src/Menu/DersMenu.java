@@ -8,28 +8,37 @@ import Util.InputUtil;
 import java.util.List;
 
 /**
- * Ders işlemleri menüsünü yöneten sınıf.
+ * Ders işlemlerine ait kullanıcı arayüzünü (alt menü) yöneten sınıf.
  * <p>
- * Bu sınıf, ders ekleme, silme ve listeleme işlemlerini kullanıcıya sunar.
- * DersService kullanılarak işlemler gerçekleştirilir.
- * Kullanıcı "geri" yazarak AnaMenu'ye dönebilir.
+ * Bu sınıf aracılığıyla kullanıcı; sisteme yeni dersler ekleyebilir,
+ * mevcut dersleri silebilir ve kayıtlı tüm dersleri listeleyebilir.
+ * Tüm işlemler {@link DersService} katmanı üzerinden gerçekleştirilir.
  * </p>
+ * * @author kral
+ * @version 1.0
  */
 public class DersMenu {
 
+    /**
+     * Ders verilerini ve iş mantığını yöneten servis.
+     */
     private final DersService dersService;
 
     /**
-     * DersMenu constructor.
+     * DersMenu nesnesi oluşturur ve gerekli servis bağımlılığını enjekte eder.
      *
-     * @param dersService Ders işlemlerini yöneten servis.
+     * @param dersService Ders işlemlerini yöneten servis katmanı.
      */
     public DersMenu(DersService dersService) {
         this.dersService = dersService;
     }
 
     /**
-     * Menü döngüsünü başlatır ve kullanıcı etkileşimini yönetir.
+     * Ders işlemleri menü döngüsünü başlatır ve kullanıcı etkileşimini yönetir.
+     * <p>
+     * Kullanıcı "geri" komutunu girene kadar aktif kalır. Seçilen işleme göre
+     * ilgili metodları (ekle, sil, listele) çağırır ve hatalı girişleri yönetir.
+     * </p>
      */
     public void baslat() {
         while (true) {
@@ -55,10 +64,10 @@ public class DersMenu {
                         dersListele();
                         break;
                     default:
-                        System.out.println("Geçersiz seçim!");
+                        System.out.println("Geçersiz seçim! Lütfen menüdeki rakamlardan birini giriniz.");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Lütfen geçerli bir seçim yapınız!");
+                System.out.println("Hata: Lütfen geçerli bir seçim (rakam veya 'geri') yapınız!");
             }
 
             ConsoleUtil.waitForEnter();
@@ -66,7 +75,7 @@ public class DersMenu {
     }
 
     /**
-     * Menü seçeneklerini ekrana yazdırır.
+     * Ders işlemleri seçeneklerini görsel bir çerçeve içinde ekrana yazdırır.
      */
     private void menuYazdir() {
         System.out.println("+---------------------------------------+");
@@ -81,7 +90,12 @@ public class DersMenu {
     }
 
     /**
-     * Kullanıcıdan ders bilgisi alarak yeni ders ekler.
+     * Kullanıcıdan ders bilgilerini alarak sisteme yeni bir ders kaydeder.
+     * <p>
+     * Kullanıcıdan sırasıyla Ders Adı, Ders Kodu ve AKTS değerlerini alır.
+     * İşlem başarılı olursa onay mesajı verir ve kullanıcıya yeni bir kayıt
+     * eklemek isteyip istemediğini sorar.
+     * </p>
      */
     private void dersEkle() {
         boolean devamEt = true;
@@ -95,7 +109,7 @@ public class DersMenu {
             if (dersService.dersEkle(ders)) {
                 System.out.println("Ders başarıyla eklendi.");
             } else {
-                System.out.println("Ders eklenemedi.");
+                System.out.println("Hata: Ders eklenemedi (Kod zaten mevcut olabilir veya geçersiz veri).");
             }
 
             String yanit = InputUtil.readString("Yeni bir ders eklemek ister misiniz? (E/H): ");
@@ -104,26 +118,31 @@ public class DersMenu {
     }
 
     /**
-     * Kullanıcıdan ders kodu alarak dersi siler.
+     * Kullanıcıdan alınan ders koduna göre dersi sistemden siler.
+     * * @see DersService#dersSil(String)
      */
     private void dersSil() {
         String kod = InputUtil.readString("Silinecek ders kodu: ");
 
         if (dersService.dersSil(kod)) {
-            System.out.println("Ders silindi.");
+            System.out.println("Ders başarıyla silindi.");
         } else {
-            System.out.println("Ders bulunamadı.");
+            System.out.println("Hata: Belirtilen kodla bir ders bulunamadı.");
         }
     }
 
     /**
-     * Sistemde kayıtlı tüm dersleri listeler.
+     * Sistemde kayıtlı olan tüm dersleri listeler.
+     * <p>
+     * Eğer sistemde kayıtlı ders yoksa kullanıcıyı bilgilendirir.
+     * Kayıtlar varsa her dersin Adı, Kodu ve AKTS bilgisini ekrana yansıtır.
+     * </p>
      */
     private void dersListele() {
         List<Ders> liste = dersService.dersListele();
 
         if (liste.isEmpty()) {
-            System.out.println("Kayıtlı ders yok.");
+            System.out.println("Sistemde henüz kayıtlı bir ders bulunmamaktadır.");
             return;
         }
 

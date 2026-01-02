@@ -7,13 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Öğrencilerin dersleri ve harf notları üzerinden
- * AKTS ağırlıklı GPA (Genel Not Ortalaması) hesaplamalarını yöneten servis sınıfıdır. [cite: 54, 60]
+ * Öğrencilerin ders başarılarını ve genel not ortalamalarını (GPA) yöneten servis sınıfıdır.
+ * <p>
+ * Bu sınıf; harf notlarının sayısal katsayılara dönüştürülmesi, not kayıtlarının tutulması
+ * ve derslerin AKTS değerleri kullanılarak ağırlıklı genel not ortalamasının hesaplanması
+ * işlemlerini gerçekleştirir.
+ * </p>
+ * @author kral
+ * @version 1.0
  */
 public class GpaService {
 
     /**
-     * Öğrenci, ders ve harf notu bilgisini birlikte tutan iç sınıftır.
+     * Öğrenci, ders ve harf notu eşleşmesini temsil eden veri yapısı.
      */
     private static class NotKaydi {
         Ogrenci ogrenci;
@@ -27,17 +33,21 @@ public class GpaService {
         }
     }
 
+    /** Sistemdeki tüm not kayıtlarını tutan liste. */
     private List<NotKaydi> notlar;
 
+    /**
+     * Yeni bir GpaService nesnesi oluşturur ve not listesini başlatır.
+     */
     public GpaService() {
         this.notlar = new ArrayList<>();
     }
 
     /**
-     * Harf notunun sayısal katsayı karşılığını döndürür. [cite: 35, 36, 43]
+     * Girilen harf notunun 4.00'lık sistemdeki sayısal katsayı karşılığını döndürür.
      *
-     * @param harfNotu AA, BA, BB vb. gibi harf notu
-     * @return Harf notunun sayısal karşılığı (4.00, 3.50 vb.), geçersizse -1.0
+     * @param harfNotu AA, BA, BB gibi standart harf notu girişi.
+     * @return Harf notunun katsayı karşılığı (Örn: AA için 4.0), geçersiz not için -1.0.
      */
     public double harfNotuKarsiligi(String harfNotu) {
         if (harfNotu == null) return -1.0;
@@ -57,12 +67,16 @@ public class GpaService {
     }
 
     /**
-     * Bir öğrenciye belirli bir ders için harf notu ekler. [cite: 34, 53]
+     * Bir öğrenci için belirli bir derse ait not kaydı oluşturur.
+     * <p>
+     * Not eklenmeden önce öğrenci ve ders nesnelerinin geçerliliği ile harf notunun
+     * formatı kontrol edilir. Aynı öğrenciye aynı ders için mükerrer kayıt eklenemez.
+     * </p>
      *
-     * @param ogrenci  Not eklenecek öğrenci
-     * @param ders     Notun ait olduğu ders
-     * @param harfNotu AA, BA gibi harf notu girişi
-     * @return İşlem başarılıysa true
+     * @param ogrenci  Notun atanacağı {@link Ogrenci} nesnesi.
+     * @param ders     Notun ait olduğu {@link Ders} nesnesi.
+     * @param harfNotu Girilen harf notu.
+     * @return İşlem başarılıysa true, geçersiz veri veya mükerrer kayıtta false döner.
      */
     public boolean notEkle(Ogrenci ogrenci, Ders ders, String harfNotu) {
         double katsayi = harfNotuKarsiligi(harfNotu);
@@ -80,7 +94,12 @@ public class GpaService {
     }
 
     /**
-     * Mevcut bir not kaydını yeni bir harf notuyla günceller.
+     * Sistemde mevcut olan bir not kaydını yeni bir harf notu ile günceller.
+     *
+     * @param ogrenci      Notu güncellenecek öğrenci.
+     * @param ders         Notu güncellenecek ders.
+     * @param yeniHarfNotu Atanacak yeni harf notu.
+     * @return Güncelleme başarılıysa true, kayıt bulunamazsa false döner.
      */
     public boolean notGuncelle(Ogrenci ogrenci, Ders ders, String yeniHarfNotu) {
         double katsayi = harfNotuKarsiligi(yeniHarfNotu);
@@ -99,11 +118,13 @@ public class GpaService {
     }
 
     /**
-     * Öğrencinin harf notlarının sayısal katsayıları ve ders AKTS'leri üzerinden
-     * ağırlıklı genel not ortalamasını hesaplar. [cite: 54, 56]
+     * Öğrencinin aldığı tüm derslerin AKTS ağırlıklı genel not ortalamasını hesaplar.
+     * <p>
+     * Hesaplama formülü: Σ(Ders Katsayısı * Ders AKTS) / Σ(Toplam AKTS).
+     * </p>
      *
-     * @param ogrenci GPA hesaplanacak öğrenci
-     * @return Hesaplanan GPA değeri
+     * @param ogrenci GPA değeri hesaplanacak öğrenci.
+     * @return Hesaplanan GPA değeri (0.00 - 4.00 arası), kayıt yoksa 0.0.
      */
     public double gpaHesapla(Ogrenci ogrenci) {
         int toplamAKTS = 0;
@@ -111,11 +132,11 @@ public class GpaService {
 
         for (NotKaydi kayit : notlar) {
             if (kayit.ogrenci.equals(ogrenci)) {
-                int akts = kayit.ders.getAkts(); // [cite: 32]
-                double katsayi = harfNotuKarsiligi(kayit.harfNotu); //
+                int akts = kayit.ders.getAkts();
+                double katsayi = harfNotuKarsiligi(kayit.harfNotu);
 
                 toplamAKTS += akts;
-                agirlikliToplam += katsayi * akts; //
+                agirlikliToplam += katsayi * akts;
             }
         }
 
@@ -127,7 +148,11 @@ public class GpaService {
     }
 
     /**
-     * Bir öğrencinin dersten aldığı harf notunu döndürür.
+     * Bir öğrencinin belirli bir dersten aldığı güncel harf notunu döndürür.
+     *
+     * @param ogrenci Sorgulanan öğrenci.
+     * @param ders    Sorgulanan ders.
+     * @return Kayıtlı harf notu, bulunamazsa null.
      */
     public String harfNotuBul(Ogrenci ogrenci, Ders ders) {
         for (NotKaydi kayit : notlar) {
@@ -138,6 +163,12 @@ public class GpaService {
         return null;
     }
 
+    /**
+     * Bir öğrencinin sistemde not kaydı bulunan tüm derslerinin listesini döndürür.
+     *
+     * @param ogrenci Dersleri listelenecek öğrenci.
+     * @return Öğrencinin aldığı dersleri içeren {@link List}.
+     */
     public List<Ders> ogrencininDersleri(Ogrenci ogrenci) {
         List<Ders> dersler = new ArrayList<>();
         for (NotKaydi kayit : notlar) {
@@ -148,6 +179,9 @@ public class GpaService {
         return dersler;
     }
 
+    /**
+     * Öğrenci ve ders ikilisi için sistemde daha önceden girilmiş bir kayıt olup olmadığını kontrol eder.
+     */
     private boolean kayitVarMi(Ogrenci ogrenci, Ders ders) {
         for (NotKaydi kayit : notlar) {
             if (kayit.ogrenci.equals(ogrenci) && kayit.ders.equals(ders)) {
@@ -156,9 +190,14 @@ public class GpaService {
         }
         return false;
     }
+
     /**
-     * Silinen bir öğrenciye ait tüm not kayıtlarını sistemden temizler.
-     * * @param ogrenci Silinen öğrenci nesnesi
+     * Sistemden silinen bir öğrenciye ait tüm geçmiş not kayıtlarını temizler.
+     * <p>
+     * Bu işlem, veri bütünlüğünü korumak ve yetim kayıt oluşmasını engellemek için önemlidir.
+     * </p>
+     *
+     * @param ogrenci Notları temizlenecek olan öğrenci nesnesi.
      */
     public void notlariTemizle(Ogrenci ogrenci) {
         if (ogrenci != null) {

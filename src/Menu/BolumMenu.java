@@ -11,18 +11,37 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Bölüm işlemleri menüsünü yöneten sınıf.
+ * Bölüm işlemlerine ait kullanıcı arayüzünü (alt menü) yöneten sınıf.
+ * <p>
+ * Bu sınıf aracılığıyla kullanıcı; sisteme yeni bölümler ekleyebilir,
+ * mevcut bölümleri silebilir veya tüm bölümleri listeleyebilir.
+ * </p>
+ * * @author kral
+ * @version 1.0
  */
 public class BolumMenu {
 
     private final OgrenciService ogrenciService;
     private final BolumService bolumService;
 
+    /**
+     * BolumMenu nesnesi oluşturur.
+     *
+     * @param bolumService   Bölüm verilerini yöneten servis.
+     * @param ogrenciService Öğrenci kontrolü (silme işlemi için) yapan servis.
+     */
     public BolumMenu(BolumService bolumService, OgrenciService ogrenciService) {
         this.bolumService = bolumService;
         this.ogrenciService = ogrenciService;
     }
 
+    /**
+     * Bölüm işlemleri menü döngüsünü başlatır.
+     * <p>
+     * Kullanıcı "geri" yazana kadar aktif kalır ve seçilen işleme göre
+     * ilgili metodları (ekle, sil, listele) çağırır.
+     * </p>
+     */
     public void baslat() {
         while (true) {
             menuYazdir();
@@ -47,16 +66,19 @@ public class BolumMenu {
                         bolumListele();
                         break;
                     default:
-                        System.out.println("Geçersiz seçim!");
+                        System.out.println("Geçersiz seçim! Lütfen menüdeki rakamlardan birini kullanın.");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Lütfen geçerli bir seçim yapınız!");
+                System.out.println("Hata: Lütfen geçerli bir seçim (rakam veya 'geri') yapınız!");
             }
 
             ConsoleUtil.waitForEnter();
         }
     }
 
+    /**
+     * Bölüm işlemleri seçeneklerini ekrana yazdırır.
+     */
     private void menuYazdir() {
         System.out.println("+---------------------------------------+");
         System.out.println("|           BÖLÜM İŞLEMLERİ              |");
@@ -70,11 +92,13 @@ public class BolumMenu {
     }
 
     /**
-     * Kullanıcıdan bölüm bilgisi alarak yeni bölüm ekler.
-     * Kuruluş tarihi için format ve mantıklılık kontrolü yapar.
+     * Kullanıcıdan alınan bilgilerle sisteme yeni bir bölüm ekler.
+     * <p>
+     * Bölüm adı ve web sayfası bilgilerini aldıktan sonra, kuruluş tarihi için
+     * {@link DateUtil} kullanarak format ve mantıklılık (gelecek tarih olmaması vb.) kontrolü yapar.
+     * </p>
      */
     private void bolumEkle() {
-        // Yeni bir bölüm eklemeden önce mevcut bölümleri gösteriyoruz
         System.out.println("\n--- Mevcut Bölümler ---");
         bolumListele();
 
@@ -86,11 +110,10 @@ public class BolumMenu {
             String tarihStr = InputUtil.readString("Kuruluş tarihi (gg.aa.yyyy): ");
             tarih = DateUtil.parseDate(tarihStr);
 
-            // Tarih kontrolü: Hem formatın doğru olması hem de tarihin mantıklı (gelecek olmaması vb.) olması gerekir
             if (tarih != null && DateUtil.isMantikliTarih(tarih)) {
                 break;
             } else if (tarih == null) {
-                System.out.println("Tarih formatı hatalı!");
+                System.out.println("Hata: Tarih formatı hatalı (Örn: 29.10.1923)!");
             } else {
                 System.out.println("Geçersiz tarih! Gelecek bir tarih veya çok eski bir tarih giremezsiniz.");
             }
@@ -101,18 +124,26 @@ public class BolumMenu {
         if (bolumService.bolumEkle(bolum)) {
             System.out.println("Bölüm başarıyla eklendi.");
         } else {
-            System.out.println("Bölüm eklenemedi (İsim boş veya zaten mevcut olabilir).");
+            System.out.println("Bölüm eklenemedi (İsim boş veya bu isimde bir bölüm zaten mevcut).");
         }
     }
 
+    /**
+     * Belirtilen bir bölümü sistemden siler.
+     * <p>
+     * Silme işleminden önce, ilgili bölüme kayıtlı öğrenci olup olmadığını kontrol eder.
+     * Eğer bölüme bağlı öğrenciler varsa, veri bütünlüğünü korumak adına silme işlemine izin vermez.
+     * </p>
+     */
     private void bolumSil() {
         String ad = InputUtil.readString("Silinecek bölüm adı: ");
 
+        // Veri bütünlüğü kontrolü: Bölüme kayıtlı öğrenci var mı?
         boolean ogrenciVarMi = ogrenciService.ogrenciListele().stream()
                 .anyMatch(o -> o.getBolum().getAd().equalsIgnoreCase(ad));
 
         if (ogrenciVarMi) {
-            System.out.println("Hata: Bu bölüme kayıtlı öğrenciler var! Önce öğrencileri silmeli veya taşımalısınız.");
+            System.out.println("Hata: Bu bölüme kayıtlı öğrenciler var! Önce öğrencileri silmeli veya başka bölüme taşımalısınız.");
         } else {
             if (bolumService.bolumSil(ad)) {
                 System.out.println("Bölüm başarıyla silindi.");
@@ -122,11 +153,14 @@ public class BolumMenu {
         }
     }
 
+    /**
+     * Sistemde kayıtlı olan tüm bölümleri detaylı bir şekilde listeler.
+     */
     private void bolumListele() {
         List<Bolum> bolumler = bolumService.bolumListele();
 
         if (bolumler.isEmpty()) {
-            System.out.println("Kayıtlı bölüm yok.");
+            System.out.println("Kayıtlı bölüm bulunmamaktadır.");
             return;
         }
 

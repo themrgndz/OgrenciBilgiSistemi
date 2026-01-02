@@ -8,10 +8,11 @@ import Util.ConsoleUtil;
 import Util.InputUtil;
 
 /**
- * Programın ana menüsünü yöneten sınıf.
+ * Programın ana kullanıcı arayüzünü (konsol menüsü) yöneten sınıf.
  * <p>
- * Kullanıcıya Bölüm, Öğrenci, Ders ve Not/GPA işlemleri için seçenekler sunar. Seçilen menüye göre ilgili alt menü başlatılır.
- * Kullanıcı "son" yazarak programı sonlandırabilir.
+ * Bu sınıf, kullanıcıya Bölüm, Öğrenci, Ders ve Not/GPA işlemlerine erişim sağlayan
+ * merkezi bir kontrol noktası sunar. Kullanıcının girdiği komutlara göre ilgili
+ * alt menüleri (BolumMenu, OgrenciMenu vb.) başlatır.
  * </p>
  */
 public class AnaMenu {
@@ -22,12 +23,12 @@ public class AnaMenu {
     private final GpaService gpaService;
 
     /**
-     * AnaMenu constructor.
+     * AnaMenu nesnesi oluşturur ve gerekli servisleri enjekte eder.
      *
-     * @param ogrenciService Öğrenci işlemlerini yöneten servis.
-     * @param dersService    Ders işlemlerini yöneten servis.
-     * @param bolumService   Bölüm işlemlerini yöneten servis.
-     * @param gpaService     Not/GPA işlemlerini yöneten servis.
+     * @param ogrenciService Öğrenci verileri ve mantığını yöneten servis.
+     * @param dersService    Ders verileri ve mantığını yöneten servis.
+     * @param bolumService   Bölüm verileri ve mantığını yöneten servis.
+     * @param gpaService     Not hesaplama ve GPA işlemlerini yöneten servis.
      */
     public AnaMenu(OgrenciService ogrenciService, DersService dersService, BolumService bolumService, GpaService gpaService) {
         this.ogrenciService = ogrenciService;
@@ -37,7 +38,7 @@ public class AnaMenu {
     }
 
     /**
-     * Ana menü seçeneklerini ekrana yazdırır.
+     * Ana menü seçeneklerini görsel bir formatta konsola yazdırır.
      */
     private void menuYazdir() {
         System.out.println("+---------------------------------------+");
@@ -53,10 +54,11 @@ public class AnaMenu {
     }
 
     /**
-     * Menü döngüsünü başlatır ve kullanıcı etkileşimini yönetir.
+     * Ana menü döngüsünü başlatır.
      * <p>
-     * Kullanıcı seçimlerine göre ilgili alt menüler başlatılır.
-     * "son" seçeneği ile program sonlandırılır.
+     * Kullanıcı "son" yazana kadar döngü devam eder. Kullanıcıdan alınan girdiler
+     * doğrultusunda ilgili servislerin menü sınıfları örneklenir ve çalıştırılır.
+     * Geçersiz sayısal girişler veya metin girişleri için hata mesajı gösterir.
      * </p>
      */
     public void baslat() {
@@ -65,6 +67,7 @@ public class AnaMenu {
 
             String secim = InputUtil.readString("Seçiminiz: ");
 
+            // Çıkış kontrolü
             if (secim.equalsIgnoreCase("son")) {
                 System.out.println("Program sonlandırılıyor... Güle güle kral 👋");
                 return;
@@ -87,10 +90,10 @@ public class AnaMenu {
                         new GpaMenu(gpaService, ogrenciService, dersService).baslat();
                         break;
                     default:
-                        System.out.println("Geçersiz seçim!");
+                        System.out.println("Geçersiz seçim! Lütfen listedeki rakamlardan birini giriniz.");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Lütfen geçerli bir seçim yapınız!");
+                System.out.println("Hata: Lütfen geçerli bir seçim (rakam veya 'son') yapınız!");
             }
 
             ConsoleUtil.waitForEnter();

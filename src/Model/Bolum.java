@@ -3,20 +3,30 @@ package Model;
 import java.time.LocalDate;
 
 /**
- * Bolum sınıfı, üniversitedeki bir akademik bölümün temel bilgilerini temsil eder.
+ * Üniversite bünyesindeki bir akademik bölümü temsil eden model sınıfıdır.
+ * <p>
+ * Bu sınıf, bölümün adı, resmi web sayfası ve kuruluş tarihi gibi
+ * temel bilgileri saklar. Kuruluş tarihi nesne oluşturulduktan sonra
+ * değiştirilemez (immutable) yapıdadır.
+ * </p>
+ * * @author kral
+ * @version 1.0
  */
 public class Bolum {
 
+    /** Bölümün tam adı (Örn: Bilgisayar Mühendisliği) */
     private String ad;
+    /** Bölümün resmi internet adresi */
     private String webSayfasi;
+    /** Bölümün resmi kuruluş tarihi (Değiştirilemez) */
     private final LocalDate kurulusTarihi;
 
     /**
-     * Bolum nesnesi oluşturur.
+     * Yeni bir Bolum nesnesi oluşturur.
      *
-     * @param ad bölümün adı
-     * @param webSayfasi bölümün resmi web sitesi
-     * @param kurulusTarihi bölümün kuruluş tarihi
+     * @param ad             Bölümün adı
+     * @param webSayfasi     Bölümün resmi web sitesi URL'si
+     * @param kurulusTarihi  Bölümün resmi kuruluş tarihi
      */
     public Bolum(String ad, String webSayfasi, LocalDate kurulusTarihi){
         this.ad = ad;
@@ -25,32 +35,34 @@ public class Bolum {
     }
 
     /**
-     * Bölüm adını döndürür.
+     * Bölümün adını döndürür.
+     * * @return Bölüm adı
      */
     public String getAd() {
         return ad;
     }
 
     /**
-     * Bölüm adını günceller.
+     * Bölümün adını günceller.
      *
-     * @param ad atanmış bölüm adı
+     * @param ad Yeni atanacak bölüm adı
      */
     public void setAd(String ad) {
         this.ad = ad;
     }
 
     /**
-     * Bölümün web sitesini döndürür.
+     * Bölümün resmi web sitesini döndürür.
+     * * @return Web sayfası adresi
      */
     public String getWebSayfasi() {
         return webSayfasi;
     }
 
     /**
-     * Bölümün web sitesini günceller.
+     * Bölümün web sitesi adresini günceller.
      *
-     * @param webSayfasi atanmış web sitesi adresi
+     * @param webSayfasi Yeni web sitesi adresi
      */
     public void setWebSayfasi(String webSayfasi) {
         this.webSayfasi = webSayfasi;
@@ -58,6 +70,7 @@ public class Bolum {
 
     /**
      * Bölümün kuruluş tarihini döndürür.
+     * * @return Kuruluş tarihi (LocalDate)
      */
     public LocalDate getKuruluşTarihi() {
         return kurulusTarihi;

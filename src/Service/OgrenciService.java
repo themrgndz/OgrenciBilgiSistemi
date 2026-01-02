@@ -5,39 +5,49 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Öğrenci işlemlerini yöneten servis sınıfıdır.
- * Öğrenci ekleme, silme, arama, listeleme ve güncelleme işlemlerini içerir.
+ * Öğrenci kayıtları ve bu kayıtlar üzerindeki iş mantığını yöneten servis sınıfıdır.
+ * <p>
+ * Bu sınıf; yeni öğrenci ekleme (9 haneli numara kontrolü ile), öğrenci silme,
+ * numara ile arama, tüm öğrencileri listeleme ve mevcut öğrenci bilgilerini
+ * güncelleme işlemlerini koordine eder.
+ * </p>
+ * @author kral
+ * @version 1.0
  */
 public class OgrenciService {
 
-    /**
-     * Sistemde kayıtlı öğrencileri tutan liste.
-     */
+    /** * Sistemde kayıtlı olan tüm öğrencileri bellekte tutan liste. */
     private List<Ogrenci> ogrenciler;
 
     /**
-     * OgrenciService yapıcı metodu.
+     * Yeni bir OgrenciService nesnesi oluşturur ve öğrenci listesini başlatır.
      */
     public OgrenciService() {
         this.ogrenciler = new ArrayList<>();
     }
 
     /**
-     * Öğrenci numarasının 9 haneli olup olmadığını kontrol eder.
-     * Örnek format: 192113001
+     * Girilen öğrenci numarasının sistem standartlarına (9 hane) uygunluğunu kontrol eder.
+     * <p>Örnek geçerli format: 192113001</p>
      *
-     * @param ogrenciNo Kontrol edilecek öğrenci numarası
-     * @return Geçerliyse true, değilse false
+     * @param ogrenciNo Kontrol edilecek tam sayı formatındaki öğrenci numarası.
+     * @return Numara tam olarak 9 haneliyse true, aksi halde false.
      */
     private boolean ogrenciNoGecerliMi(int ogrenciNo) {
         return String.valueOf(ogrenciNo).length() == 9;
     }
 
     /**
-     * Sisteme yeni öğrenci ekler.
+     * Sisteme yeni bir öğrenci kaydı ekler.
+     * <p>
+     * Ekleme işlemi yapılmadan önce şu doğrulamalar gerçekleştirilir:
+     * 1. Öğrenci nesnesi null olamaz.
+     * 2. Öğrenci numarası tam 9 hane olmalıdır.
+     * 3. Aynı öğrenci numarasıyla sistemde başka bir kayıt bulunmamalıdır.
+     * </p>
      *
-     * @param ogrenci Eklenecek öğrenci
-     * @return Başarılıysa true, değilse false
+     * @param ogrenci Eklenecek olan {@link Ogrenci} nesnesi.
+     * @return Kayıt başarıyla eklenirse true, kural ihlali durumunda false döner.
      */
     public boolean ogrenciEkle(Ogrenci ogrenci) {
         if (ogrenci == null) {
@@ -45,7 +55,7 @@ public class OgrenciService {
         }
 
         if (!ogrenciNoGecerliMi(ogrenci.getOgrenciNo())) {
-            System.out.println("Öğrenci numarası 9 haneli olmalıdır (Örn: 192113001)");
+            System.out.println("Hata: Öğrenci numarası 9 haneli olmalıdır (Örn: 192113001)");
             return false;
         }
 
@@ -58,10 +68,10 @@ public class OgrenciService {
     }
 
     /**
-     * Öğrenci numarasına göre öğrenci siler.
+     * Verilen öğrenci numarasına sahip kaydı sistemden kalıcı olarak siler.
      *
-     * @param ogrenciNo Silinecek öğrenci numarası
-     * @return Başarılıysa true
+     * @param ogrenciNo Silinecek öğrencinin benzersiz numarası.
+     * @return Silme işlemi başarılıysa true, öğrenci bulunamazsa false döner.
      */
     public boolean ogrenciSil(int ogrenciNo) {
         Ogrenci ogrenci = ogrenciAra(ogrenciNo);
@@ -73,10 +83,10 @@ public class OgrenciService {
     }
 
     /**
-     * Öğrenci numarasına göre öğrenci arar.
+     * Sistemde öğrenci numarasına göre arama yapar.
      *
-     * @param ogrenciNo Aranacak numara
-     * @return Ogrenci nesnesi veya null
+     * @param ogrenciNo Aranacak benzersiz öğrenci numarası.
+     * @return Eşleşen {@link Ogrenci} nesnesini döndürür, bulunamazsa null döndürür.
      */
     public Ogrenci ogrenciAra(int ogrenciNo) {
         for (Ogrenci ogrenci : ogrenciler) {
@@ -88,29 +98,33 @@ public class OgrenciService {
     }
 
     /**
-     * Tüm öğrencileri listeler.
+     * Sistemde kayıtlı olan tüm öğrencilerin listesini döndürür.
      *
-     * @return Öğrenci listesi
+     * @return Mevcut tüm öğrencileri içeren {@link List}.
      */
     public List<Ogrenci> ogrenciListele() {
         return ogrenciler;
     }
 
     /**
-     * Öğrenci var mı kontrolü.
+     * Belirtilen öğrenci numarasının sistemde kayıtlı olup olmadığını kontrol eder.
      *
-     * @param ogrenciNo Kontrol edilecek numara
-     * @return Varsa true
+     * @param ogrenciNo Kontrol edilecek numara.
+     * @return Kayıt mevcutsa true, yoksa false döner.
      */
     public boolean ogrenciVarMi(int ogrenciNo) {
         return ogrenciAra(ogrenciNo) != null;
     }
 
     /**
-     * Öğrenci bilgilerini günceller.
+     * Mevcut bir öğrencinin temel bilgilerini (isim ve soyisim) günceller.
+     * <p>
+     * İş kuralı gereği; öğrenci numarası, bölümü ve doğum tarihi gibi temel
+     * kimlik bilgileri bu metod üzerinden değiştirilemez.
+     * </p>
      *
-     * @param ogrenci Güncellenmiş öğrenci
-     * @return Başarılıysa true
+     * @param ogrenci Güncel bilgileri taşıyan {@link Ogrenci} nesnesi.
+     * @return Güncelleme başarılıysa true, öğrenci bulunamazsa false döner.
      */
     public boolean ogrenciGuncelle(Ogrenci ogrenci) {
         Ogrenci eski = ogrenciAra(ogrenci.getOgrenciNo());

@@ -5,20 +5,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Ders işlemlerini yöneten servis sınıfıdır.
+ * Üniversite dersleriyle ilgili iş mantığını yöneten servis sınıfıdır.
  * <p>
- * Ders ekleme, silme, arama, listeleme ve güncelleme işlemleri bu sınıf üzerinden gerçekleştirilir.
+ * Bu sınıf; derslerin sisteme eklenmesi, silinmesi, benzersiz ders koduyla aranması,
+ * listelenmesi ve mevcut ders bilgilerinin güncellenmesi işlemlerini koordine eder.
+ * Veri bütünlüğünü sağlamak için AKTS değerinin pozitifliği ve ders kodunun
+ * benzersizliği gibi kritik kontrolleri gerçekleştirir.
  * </p>
+ * @author kral
+ * @version 1.0
  */
 public class DersService {
 
-    /**
-     * Sistemde tanımlı olan tüm dersleri tutan liste.
+    /** * Sistemde tanımlı olan tüm dersleri bellekte tutan liste.
      */
     private List<Ders> dersler;
 
     /**
-     * DersService nesnesini oluşturur ve ders listesini başlatır.
+     * Yeni bir DersService nesnesi oluşturur ve ders listesini başlatır.
      */
     public DersService() {
         this.dersler = new ArrayList<>();
@@ -26,9 +30,15 @@ public class DersService {
 
     /**
      * Sisteme yeni bir ders ekler.
+     * <p>
+     * Ekleme öncesinde şu kontroller yapılır:
+     * 1. Ders nesnesi, adı ve kodu boş olamaz.
+     * 2. AKTS değeri sıfırdan büyük olmalıdır.
+     * 3. Girilen ders kodu sistemde başka bir ders tarafından kullanılmıyor olmalıdır.
+     * </p>
      *
-     * @param ders Eklenecek ders nesnesi
-     * @return Ders başarıyla eklenirse true, aksi halde false döner
+     * @param ders Eklenecek {@link Ders} nesnesi.
+     * @return Ders başarıyla eklenirse true, kural ihlali varsa false döner.
      */
     public boolean dersEkle(Ders ders) {
         if (ders == null ||
@@ -51,10 +61,10 @@ public class DersService {
     }
 
     /**
-     * Ders koduna göre dersi sistemden siler.
+     * Benzersiz ders koduna göre ilgili dersi sistemden siler.
      *
-     * @param dersKodu Silinecek dersin kodu
-     * @return Silme işlemi başarılıysa true, aksi halde false döner
+     * @param dersKodu Silinecek dersin kodu (Örn: Java445).
+     * @return Silme işlemi başarılıysa true, ders bulunamazsa false döner.
      */
     public boolean dersSil(String dersKodu) {
         Ders ders = dersAra(dersKodu);
@@ -67,10 +77,13 @@ public class DersService {
     }
 
     /**
-     * Ders koduna göre ders arar.
+     * Ders koduna göre sistemde arama yapar.
+     * <p>
+     * Arama işlemi büyük/küçük harf duyarsız (case-insensitive) olarak gerçekleştirilir.
+     * </p>
      *
-     * @param dersKodu Aranacak dersin kodu
-     * @return Ders bulunursa Ders nesnesi, bulunamazsa null döner
+     * @param dersKodu Aranacak dersin kodu.
+     * @return Ders bulunursa {@link Ders} nesnesini, bulunamazsa null döndürür.
      */
     public Ders dersAra(String dersKodu) {
         for (Ders ders : dersler) {
@@ -82,30 +95,33 @@ public class DersService {
     }
 
     /**
-     * Sistemdeki tüm dersleri listeler.
+     * Sistemde kayıtlı olan tüm derslerin listesini döndürür.
      *
-     * @return Ders listesini döndürür
+     * @return Mevcut tüm dersleri içeren {@link List}.
      */
     public List<Ders> dersListele() {
         return dersler;
     }
 
     /**
-     * Verilen ders koduna sahip bir dersin sistemde var olup olmadığını kontrol eder.
+     * Belirtilen koda sahip bir dersin sistemde kayıtlı olup olmadığını kontrol eder.
      *
-     * @param dersKodu Kontrol edilecek ders kodu
-     * @return Ders varsa true, yoksa false döner
+     * @param dersKodu Kontrol edilecek ders kodu.
+     * @return Ders varsa true, yoksa false döner.
      */
     public boolean dersVarMi(String dersKodu) {
         return dersAra(dersKodu) != null;
     }
 
     /**
-     * Var olan bir dersin adını günceller.
-     * Ders kodu değiştirilemez kabul edilmiştir.
+     * Mevcut bir dersin bilgilerini günceller.
+     * <p>
+     * İş kuralı gereği, ders kodları benzersiz kimlik (ID) kabul edildiği için
+     * değiştirilemez. Bu metod dersin adını günceller; AKTS değişimine de izin verir.
+     * </p>
      *
-     * @param ders Güncellenmiş bilgileri içeren ders nesnesi
-     * @return Güncelleme başarılıysa true, aksi halde false döner
+     * @param ders Güncellenmiş bilgileri içeren {@link Ders} nesnesi.
+     * @return Güncelleme başarılıysa true, ders bulunamazsa false döner.
      */
     public boolean dersGuncelle(Ders ders) {
         if (ders == null) {

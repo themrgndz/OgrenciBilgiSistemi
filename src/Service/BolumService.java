@@ -5,21 +5,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Bölüm işlemlerini yöneten servis sınıfıdır.
+ * Üniversite bölümleriyle ilgili iş mantığını yöneten servis sınıfıdır.
  * <p>
- * Bölüm ekleme, silme, arama, listeleme ve güncelleme işlemleri bu sınıf üzerinden gerçekleştirilir.
+ * Bu sınıf; bölümlerin sisteme eklenmesi, silinmesi, aranması, listelenmesi ve
+ * bilgilerinin güncellenmesi gibi operasyonları merkezi bir noktadan yönetir.
+ * Veri tutarlılığını sağlamak için isim kontrolü gibi doğrulamaları gerçekleştirir.
  * </p>
+ * @author kral
+ * @version 1.0
  */
 public class BolumService {
 
-    /**
-     * Sistemde tanımlı olan tüm bölümleri tutan liste.
+    /** * Sistemde tanımlı olan tüm bölümleri bellekte tutan liste.
      */
     private List<Bolum> bolumler;
 
     /**
-     * BolumService nesnesini oluşturur ve
-     * bölüm listesini başlatır.
+     * Yeni bir BolumService nesnesi oluşturur ve bölüm listesini başlatır.
      */
     public BolumService() {
         this.bolumler = new ArrayList<>();
@@ -27,9 +29,13 @@ public class BolumService {
 
     /**
      * Sisteme yeni bir bölüm ekler.
+     * <p>
+     * Ekleme işlemi yapılmadan önce bölümün geçerliliği ve isim çakışması kontrol edilir.
+     * Boş isimli veya sistemde zaten kayıtlı olan bölümler eklenmez.
+     * </p>
      *
-     * @param bolum Eklenecek bölüm nesnesi
-     * @return Bölüm başarıyla eklenirse true, aksi halde false döner
+     * @param bolum Eklenecek {@link Bolum} nesnesi.
+     * @return Bölüm başarıyla eklenirse true, aksi halde false döner.
      */
     public boolean bolumEkle(Bolum bolum) {
         if (bolum == null || bolum.getAd() == null || bolum.getAd().trim().isEmpty()) {
@@ -45,10 +51,10 @@ public class BolumService {
     }
 
     /**
-     * Bölüm adına göre bölümü sistemden siler.
+     * Bölüm adına göre ilgili bölümü sistemden siler.
      *
-     * @param bolumAdi Silinecek bölümün adı
-     * @return Silme işlemi başarılıysa true, aksi halde false döner
+     * @param bolumAdi Silinecek bölümün tam adı.
+     * @return Silme işlemi başarılıysa true, bölüm bulunamazsa false döner.
      */
     public boolean bolumSil(String bolumAdi) {
         Bolum bolum = bolumAra(bolumAdi);
@@ -61,10 +67,13 @@ public class BolumService {
     }
 
     /**
-     * Bölüm adına göre bölüm arar.
+     * Bölüm adına göre sistemde arama yapar.
+     * <p>
+     * Arama işlemi büyük/küçük harf duyarsız (case-insensitive) olarak gerçekleştirilir.
+     * </p>
      *
-     * @param bolumAdi Aranacak bölümün adı
-     * @return Bölüm bulunursa Bolum nesnesi, bulunamazsa null döner
+     * @param bolumAdi Aranacak bölümün adı.
+     * @return Bölüm bulunursa {@link Bolum} nesnesini, bulunamazsa null döndürür.
      */
     public Bolum bolumAra(String bolumAdi) {
         for (Bolum bolum : bolumler) {
@@ -76,30 +85,33 @@ public class BolumService {
     }
 
     /**
-     * Sistemdeki tüm bölümleri listeler.
+     * Sistemde kayıtlı olan tüm bölümlerin listesini döndürür.
      *
-     * @return Bölüm listesini döndürür
+     * @return Mevcut tüm bölümleri içeren {@link List}.
      */
     public List<Bolum> bolumListele() {
         return bolumler;
     }
 
     /**
-     * Verilen bölüm adına sahip bir bölümün sistemde var olup olmadığını kontrol eder.
+     * Belirtilen isimde bir bölümün sistemde kayıtlı olup olmadığını kontrol eder.
      *
-     * @param bolumAdi Kontrol edilecek bölüm adı
-     * @return Bölüm varsa true, yoksa false döner
+     * @param bolumAdi Kontrol edilecek bölüm adı.
+     * @return Bölüm varsa true, yoksa false döner.
      */
     public boolean bolumVarMi(String bolumAdi) {
         return bolumAra(bolumAdi) != null;
     }
 
     /**
-     * Var olan bir bölümün web sayfası bilgisini günceller.
-     * Bölümün kuruluş tarihi değiştirilemez kabul edilmiştir.
+     * Mevcut bir bölümün bilgilerini günceller.
+     * <p>
+     * İş kuralı gereği, bölümlerin kuruluş tarihi değiştirilemez kabul edilmiştir.
+     * Bu metod sadece web sayfası bilgisini günceller.
+     * </p>
      *
-     * @param bolum Güncellenmiş bilgileri içeren bölüm nesnesi
-     * @return Güncelleme başarılıysa true, aksi halde false döner
+     * @param bolum Güncellenmiş bilgileri içeren {@link Bolum} nesnesi.
+     * @return Güncelleme başarılıysa true, bölüm bulunamazsa false döner.
      */
     public boolean bolumGuncelle(Bolum bolum) {
         if (bolum == null) {
