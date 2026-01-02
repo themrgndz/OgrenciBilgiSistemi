@@ -37,6 +37,11 @@ public class DersService {
             return false;
         }
 
+        if (ders.getAkts() <= 0) {
+            System.out.println("Hata: AKTS değeri 0'dan büyük olmalıdır!");
+            return false;
+        }
+
         if (dersVarMi(ders.getKod())) {
             return false;
         }

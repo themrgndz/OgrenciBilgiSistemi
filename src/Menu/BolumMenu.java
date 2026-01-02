@@ -2,6 +2,7 @@ package Menu;
 
 import Model.Bolum;
 import Service.BolumService;
+import Service.OgrenciService;
 import Util.ConsoleUtil;
 import Util.InputUtil;
 import Util.DateUtil;
@@ -14,10 +15,12 @@ import java.util.List;
  */
 public class BolumMenu {
 
+    private final OgrenciService ogrenciService;
     private final BolumService bolumService;
 
-    public BolumMenu(BolumService bolumService) {
+    public BolumMenu(BolumService bolumService, OgrenciService ogrenciService) {
         this.bolumService = bolumService;
+        this.ogrenciService = ogrenciService;
     }
 
     public void baslat() {
@@ -105,10 +108,17 @@ public class BolumMenu {
     private void bolumSil() {
         String ad = InputUtil.readString("Silinecek bölüm adı: ");
 
-        if (bolumService.bolumSil(ad)) {
-            System.out.println("Bölüm silindi.");
+        boolean ogrenciVarMi = ogrenciService.ogrenciListele().stream()
+                .anyMatch(o -> o.getBolum().getAd().equalsIgnoreCase(ad));
+
+        if (ogrenciVarMi) {
+            System.out.println("Hata: Bu bölüme kayıtlı öğrenciler var! Önce öğrencileri silmeli veya taşımalısınız.");
         } else {
-            System.out.println("Bölüm bulunamadı.");
+            if (bolumService.bolumSil(ad)) {
+                System.out.println("Bölüm başarıyla silindi.");
+            } else {
+                System.out.println("Bölüm bulunamadı.");
+            }
         }
     }
 

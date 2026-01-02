@@ -75,7 +75,7 @@ public class AnaMenu {
 
                 switch (secimNo) {
                     case 1:
-                        new BolumMenu(bolumService).baslat();
+                        new BolumMenu(bolumService, ogrenciService).baslat();
                         break;
                     case 2:
                         new OgrenciMenu(ogrenciService, bolumService).baslat();

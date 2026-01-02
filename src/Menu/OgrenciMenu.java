@@ -53,6 +53,9 @@ public class OgrenciMenu {
                     case 4:
                         ogrenciListele();
                         break;
+                    case 5:
+                        ogrenciGuncelle();
+                        break;
                     default:
                         System.out.println("Geçersiz seçim!");
                 }
@@ -72,6 +75,7 @@ public class OgrenciMenu {
         System.out.println("|   2 - Öğrenci Sil                     |");
         System.out.println("|   3 - Öğrenci Ara                     |");
         System.out.println("|   4 - Öğrencileri Listele             |");
+        System.out.println("|   5 - Öğrenci Güncelle                |");
         System.out.println("+---------------------------------------+");
         System.out.println("|   geri - Ana Menüye Dön               |");
         System.out.println("+---------------------------------------+");
@@ -86,7 +90,6 @@ public class OgrenciMenu {
         while (devamEt) {
             System.out.println("\n--- Yeni Öğrenci Kaydı ---");
 
-            // Bölüm Kontrolü
             List<Bolum> bolumler = bolumService.bolumListele();
             if (bolumler.isEmpty()) {
                 System.out.println("Sistemde kayıtlı bölüm yok! Önce Bölüm İşlemleri menüsünden bir bölüm eklemelisiniz.");
@@ -97,7 +100,6 @@ public class OgrenciMenu {
             String soyisim = InputUtil.readOnlyText("Soyisim: ");
             int no = InputUtil.readInt("Öğrenci No: ");
 
-            // Numaralandırılmış Bölüm Seçimi
             System.out.println("\nLütfen bir bölüm seçiniz:");
             for (int i = 0; i < bolumler.size(); i++) {
                 System.out.println((i + 1) + " - " + bolumler.get(i).getAd());
@@ -113,7 +115,6 @@ public class OgrenciMenu {
                 }
             }
 
-            // Tarih Girişi ve Kontrolü
             LocalDate tarih;
             while (true) {
                 String tarihStr = InputUtil.readString("Doğum Tarihi (gg.aa.yyyy): ");
@@ -133,11 +134,40 @@ public class OgrenciMenu {
             if (ogrenciService.ogrenciEkle(ogrenci)) {
                 System.out.println("Öğrenci (" + bolum.getAd() + " bölümüne) başarıyla eklendi.");
             } else {
-                System.out.println("Öğrenci eklenemedi (Numara zaten mevcut olabilir).");
+                System.out.println("Öğrenci eklenemedi (Numara zaten mevcut olabilir veya 9 hane kuralına uymuyor).");
             }
 
             String yanit = InputUtil.readString("\nYeni bir öğrenci daha eklemek ister misiniz? (E/H): ");
             devamEt = yanit.equalsIgnoreCase("E");
+        }
+    }
+
+    /**
+     * Öğrenci bilgilerini güncelleyen metot.
+     */
+    private void ogrenciGuncelle() {
+        int no = InputUtil.readInt("Güncellenecek öğrenci no: ");
+        Ogrenci mevcutOgrenci = ogrenciService.ogrenciAra(no);
+
+        if (mevcutOgrenci == null) {
+            System.out.println("Öğrenci bulunamadı.");
+            return;
+        }
+
+        System.out.println("\nMevcut Bilgiler: " + mevcutOgrenci.getIsim() + " " + mevcutOgrenci.getSoyisim());
+        System.out.println("--- Yeni Bilgileri Giriniz (İptal için Enter) ---");
+
+        String yeniIsim = InputUtil.readOnlyText("Yeni İsim: ");
+        String yeniSoyisim = InputUtil.readOnlyText("Yeni Soyisim: ");
+
+        Ogrenci guncelOgrenci = new Ogrenci(yeniIsim, yeniSoyisim, no,
+                mevcutOgrenci.getDogumTarihi(),
+                mevcutOgrenci.getBolum());
+
+        if (ogrenciService.ogrenciGuncelle(guncelOgrenci)) {
+            System.out.println("Öğrenci bilgileri başarıyla güncellendi.");
+        } else {
+            System.out.println("Güncelleme sırasında bir hata oluştu.");
         }
     }
 
