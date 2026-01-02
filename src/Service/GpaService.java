@@ -34,7 +34,7 @@ public class GpaService {
     }
 
     /** Sistemdeki tüm not kayıtlarını tutan liste. */
-    private List<NotKaydi> notlar;
+    private final List<NotKaydi> notlar;
 
     /**
      * Yeni bir GpaService nesnesi oluşturur ve not listesini başlatır.

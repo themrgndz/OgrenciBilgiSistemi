@@ -41,16 +41,6 @@ public class Bolum {
     public String getAd() {
         return ad;
     }
-
-    /**
-     * Bölümün adını günceller.
-     *
-     * @param ad Yeni atanacak bölüm adı
-     */
-    public void setAd(String ad) {
-        this.ad = ad;
-    }
-
     /**
      * Bölümün resmi web sitesini döndürür.
      * * @return Web sayfası adresi
@@ -72,7 +62,7 @@ public class Bolum {
      * Bölümün kuruluş tarihini döndürür.
      * * @return Kuruluş tarihi (LocalDate)
      */
-    public LocalDate getKuruluşTarihi() {
+    public LocalDate getKurulusTarihi() {
         return kurulusTarihi;
     }
 }

@@ -10,22 +10,6 @@ package Util;
  * @version 1.0
  */
 public class ConsoleUtil {
-
-    /**
-     * Belirtilen metni konsolda vurgulu bir başlık formatında yazdırır.
-     * <p>
-     * Başlığın üstüne ve altına eşittir (=) işaretlerinden oluşan çizgiler ekleyerek
-     * görsel bir çerçeve oluşturur.
-     * </p>
-     *
-     * @param title Ekrana yazdırılacak olan başlık metni.
-     */
-    public static void printTitle(String title) {
-        System.out.println("\n==============================");
-        System.out.println(title);
-        System.out.println("==============================");
-    }
-
     /**
      * Konsol ekranına standart bir ayırıcı çizgi (tirelerden oluşan) yazdırır.
      * <p>

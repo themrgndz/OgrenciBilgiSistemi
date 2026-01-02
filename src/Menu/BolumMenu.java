@@ -168,7 +168,7 @@ public class BolumMenu {
         for (Bolum bolum : bolumler) {
             System.out.println("Bölüm Adı      : " + bolum.getAd());
             System.out.println("Web Sayfası   : " + bolum.getWebSayfasi());
-            System.out.println("Kuruluş Tarihi: " + DateUtil.formatDate(bolum.getKuruluşTarihi()));
+            System.out.println("Kuruluş Tarihi: " + DateUtil.formatDate(bolum.getKurulusTarihi()));
             ConsoleUtil.printLine();
         }
     }

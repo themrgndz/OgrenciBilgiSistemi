@@ -17,7 +17,7 @@ import java.util.List;
 public class OgrenciService {
 
     /** * Sistemde kayıtlı olan tüm öğrencileri bellekte tutan liste. */
-    private List<Ogrenci> ogrenciler;
+    private final List<Ogrenci> ogrenciler;
 
     /**
      * Yeni bir OgrenciService nesnesi oluşturur ve öğrenci listesini başlatır.

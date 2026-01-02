@@ -15,9 +15,9 @@ public class Ders {
     /** Dersin tam adı (Örn: Nesne Yönelimli Programlama) */
     private String ad;
     /** Dersin benzersiz kodu (Örn: NYP101) */
-    private String kod;
+    private final String kod;
     /** Dersin AKTS kredi değeri */
-    private int akts;
+    private final int akts;
 
     /**
      * Yeni bir Ders nesnesi oluşturur.

@@ -19,11 +19,11 @@ public class Ogrenci {
     /** Öğrencinin soyadı */
     private String soyisim;
     /** Öğrencinin benzersiz 9 haneli okul numarası */
-    private int ogrenciNo;
+    private final int ogrenciNo;
     /** Öğrencinin doğum tarihi (LocalDate formatında) */
-    private LocalDate dogumTarihi;
+    private final LocalDate dogumTarihi;
     /** Öğrencinin kayıtlı olduğu akademik bölüm */
-    private Bolum bolum;
+    private final Bolum bolum;
 
     /**
      * Yeni bir Ogrenci nesnesi oluşturur.

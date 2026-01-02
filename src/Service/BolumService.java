@@ -18,7 +18,7 @@ public class BolumService {
 
     /** * Sistemde tanımlı olan tüm bölümleri bellekte tutan liste.
      */
-    private List<Bolum> bolumler;
+    private final List<Bolum> bolumler;
 
     /**
      * Yeni bir BolumService nesnesi oluşturur ve bölüm listesini başlatır.
@@ -101,29 +101,5 @@ public class BolumService {
      */
     public boolean bolumVarMi(String bolumAdi) {
         return bolumAra(bolumAdi) != null;
-    }
-
-    /**
-     * Mevcut bir bölümün bilgilerini günceller.
-     * <p>
-     * İş kuralı gereği, bölümlerin kuruluş tarihi değiştirilemez kabul edilmiştir.
-     * Bu metod sadece web sayfası bilgisini günceller.
-     * </p>
-     *
-     * @param bolum Güncellenmiş bilgileri içeren {@link Bolum} nesnesi.
-     * @return Güncelleme başarılıysa true, bölüm bulunamazsa false döner.
-     */
-    public boolean bolumGuncelle(Bolum bolum) {
-        if (bolum == null) {
-            return false;
-        }
-
-        Bolum eskiBolum = bolumAra(bolum.getAd());
-        if (eskiBolum == null) {
-            return false;
-        }
-
-        eskiBolum.setWebSayfasi(bolum.getWebSayfasi());
-        return true;
     }
 }
