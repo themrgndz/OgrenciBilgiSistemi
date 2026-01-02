@@ -2,6 +2,7 @@ package Menu;
 
 import Model.Ogrenci;
 import Model.Bolum;
+import Service.GpaService;
 import Service.OgrenciService;
 import Service.BolumService;
 import Util.ConsoleUtil;
@@ -21,10 +22,12 @@ public class OgrenciMenu {
 
     private final OgrenciService ogrenciService;
     private final BolumService bolumService;
+    private final GpaService gpaService;
 
-    public OgrenciMenu(OgrenciService ogrenciService, BolumService bolumService) {
+    public OgrenciMenu(OgrenciService ogrenciService, BolumService bolumService, GpaService gpaService) {
         this.ogrenciService = ogrenciService;
         this.bolumService = bolumService;
+        this.gpaService = gpaService;
     }
 
     public void baslat() {
@@ -173,8 +176,13 @@ public class OgrenciMenu {
 
     private void ogrenciSil() {
         int no = InputUtil.readInt("Silinecek öğrenci no: ");
-        if (ogrenciService.ogrenciSil(no)) {
-            System.out.println("Öğrenci silindi.");
+        Ogrenci ogrenci = ogrenciService.ogrenciAra(no);
+
+        if (ogrenci != null) {
+            gpaService.notlariTemizle(ogrenci);
+            if (ogrenciService.ogrenciSil(no)) {
+                System.out.println("Öğrenci ve ilgili tüm not kayıtları silindi.");
+            }
         } else {
             System.out.println("Öğrenci bulunamadı.");
         }

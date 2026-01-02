@@ -78,7 +78,7 @@ public class AnaMenu {
                         new BolumMenu(bolumService, ogrenciService).baslat();
                         break;
                     case 2:
-                        new OgrenciMenu(ogrenciService, bolumService).baslat();
+                        new OgrenciMenu(ogrenciService, bolumService, gpaService).baslat();
                         break;
                     case 3:
                         new DersMenu(dersService).baslat();

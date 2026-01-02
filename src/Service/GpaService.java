@@ -156,4 +156,13 @@ public class GpaService {
         }
         return false;
     }
+    /**
+     * Silinen bir öğrenciye ait tüm not kayıtlarını sistemden temizler.
+     * * @param ogrenci Silinen öğrenci nesnesi
+     */
+    public void notlariTemizle(Ogrenci ogrenci) {
+        if (ogrenci != null) {
+            notlar.removeIf(kayit -> kayit.ogrenci.equals(ogrenci));
+        }
+    }
 }
