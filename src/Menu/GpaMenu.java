@@ -8,11 +8,16 @@ import Service.DersService;
 import Util.ConsoleUtil;
 import Util.InputUtil;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Not ve GPA işlemlerini yöneten sınıf.
  * Harf notu sistemi ve AKTS ağırlıklı GPA hesaplama işlemlerini kullanıcıya sunar.
+ * Ayrıca sonuçları GPA'ya göre sıralayıp dosyaya kaydeder.
  */
 public class GpaMenu {
 
@@ -57,6 +62,9 @@ public class GpaMenu {
                     case 5:
                         ogrencininDersleriniListele();
                         break;
+                    case 6:
+                        gpaSiraliListeleVeKaydet();
+                        break;
                     default:
                         System.out.println("Geçersiz seçim!");
                 }
@@ -77,14 +85,12 @@ public class GpaMenu {
         System.out.println("|   3 - Not Görüntüle                    |");
         System.out.println("|   4 - GPA Hesapla                      |");
         System.out.println("|   5 - Öğrencinin Aldığı Dersler        |");
+        System.out.println("|   6 - Sıralı Listele ve Dosyaya Kaydet |");
         System.out.println("+---------------------------------------+");
         System.out.println("|   geri - Ana Menüye Dön               |");
         System.out.println("+---------------------------------------+");
     }
 
-    /**
-     * Kullanıcıdan öğrenci, ders ve harf notu alarak ekleme yapar.
-     */
     private void notEkle() {
         int ogrNo = InputUtil.readInt("Öğrenci No: ");
         Ogrenci ogrenci = ogrenciService.ogrenciAra(ogrNo);
@@ -108,9 +114,6 @@ public class GpaMenu {
         }
     }
 
-    /**
-     * Mevcut bir harf notunu günceller.
-     */
     private void notGuncelle() {
         int ogrNo = InputUtil.readInt("Öğrenci No: ");
         Ogrenci ogrenci = ogrenciService.ogrenciAra(ogrNo);
@@ -134,9 +137,6 @@ public class GpaMenu {
         }
     }
 
-    /**
-     * Öğrencinin bir dersteki harf notunu görüntüler.
-     */
     private void notGoruntule() {
         int ogrNo = InputUtil.readInt("Öğrenci No: ");
         Ogrenci ogrenci = ogrenciService.ogrenciAra(ogrNo);
@@ -195,6 +195,45 @@ public class GpaMenu {
             System.out.println("AKTS      : " + ders.getAkts());
             System.out.println("Harf Notu : " + (harfNotu != null ? harfNotu : "Girilmemiş"));
             ConsoleUtil.printLine();
+        }
+    }
+
+    /**
+     * Öğrencileri genel not ortalamalarına (GPA) göre azalan sırada konsola yazdırır
+     * ve aynı çıktıyı 'sonuclar.txt' dosyasına kaydeder[cite: 57, 58].
+     */
+    private void gpaSiraliListeleVeKaydet() {
+        List<Ogrenci> ogrenciler = new ArrayList<>(ogrenciService.ogrenciListele());
+
+        if (ogrenciler.isEmpty()) {
+            System.out.println("Sistemde kayıtlı öğrenci yok.");
+            return;
+        }
+
+        // GPA'ya göre azalan (büyükten küçüğe) sıralama
+        ogrenciler.sort((o1, o2) -> Double.compare(gpaService.gpaHesapla(o2), gpaService.gpaHesapla(o1)));
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter("sonuclar.txt"))) {
+            System.out.println("\n--- GPA SIRALI LİSTE ---");
+            writer.println("--- GPA SIRALI LİSTE ---");
+
+            for (int i = 0; i < ogrenciler.size(); i++) {
+                Ogrenci ogrenci = ogrenciler.get(i);
+                double gpa = gpaService.gpaHesapla(ogrenci);
+
+                // Sıra numarası, isim, soyisim ve GPA formatı
+                String satir = String.format("%d. %s %s - No: %d - GPA: %.2f",
+                        (i + 1), ogrenci.getIsim(), ogrenci.getSoyisim(),
+                        ogrenci.getOgrenciNo(), gpa);
+
+                System.out.println(satir);
+                writer.println(satir); // Dosyaya yazdır
+            }
+
+            System.out.println("\nSonuçlar 'sonuclar.txt' dosyasına başarıyla kaydedildi.");
+
+        } catch (IOException e) {
+            System.out.println("Dosya yazılırken bir hata oluştu: " + e.getMessage());
         }
     }
 }
