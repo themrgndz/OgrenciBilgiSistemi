@@ -6,35 +6,46 @@ import java.util.List;
 
 /**
  * Öğrenci işlemlerini yöneten servis sınıfıdır.
- * <p>
- * Öğrenci ekleme, silme, arama, listeleme ve güncelleme gibi tüm iş kuralları bu sınıf içerisinde toplanmıştır.
- * </p>
+ * Öğrenci ekleme, silme, arama, listeleme ve güncelleme işlemlerini içerir.
  */
 public class OgrenciService {
 
     /**
-     * Sistemdeki tüm öğrencileri tutan liste.
+     * Sistemde kayıtlı öğrencileri tutan liste.
      */
     private List<Ogrenci> ogrenciler;
 
     /**
-     * OgrenciService nesnesini oluşturur ve
-     * öğrenci listesini başlatır.
+     * OgrenciService yapıcı metodu.
      */
     public OgrenciService() {
         this.ogrenciler = new ArrayList<>();
     }
 
     /**
-     * Sisteme yeni bir öğrenci ekler.
+     * Öğrenci numarasının 9 haneli olup olmadığını kontrol eder.
+     * Örnek format: 192113001
      *
-     * @param ogrenci Eklenecek öğrenci nesnesi
-     * @return Öğrenci başarıyla eklenirse true, aksi halde false döner
+     * @param ogrenciNo Kontrol edilecek öğrenci numarası
+     * @return Geçerliyse true, değilse false
+     */
+    private boolean ogrenciNoGecerliMi(int ogrenciNo) {
+        return String.valueOf(ogrenciNo).length() == 9;
+    }
+
+    /**
+     * Sisteme yeni öğrenci ekler.
+     *
+     * @param ogrenci Eklenecek öğrenci
+     * @return Başarılıysa true, değilse false
      */
     public boolean ogrenciEkle(Ogrenci ogrenci) {
-        if (ogrenci == null ||
-                ogrenci.getIsim() == null || ogrenci.getIsim().trim().isEmpty() ||
-                ogrenci.getSoyisim() == null || ogrenci.getSoyisim().trim().isEmpty()) {
+        if (ogrenci == null) {
+            return false;
+        }
+
+        if (!ogrenciNoGecerliMi(ogrenci.getOgrenciNo())) {
+            System.out.println("Öğrenci numarası 9 haneli olmalıdır (Örn: 192113001)");
             return false;
         }
 
@@ -47,17 +58,16 @@ public class OgrenciService {
     }
 
     /**
-     * Öğrenci numarasına göre öğrenciyi sistemden siler.
+     * Öğrenci numarasına göre öğrenci siler.
      *
-     * @param ogrenciNo Silinecek öğrencinin numarası
-     * @return Silme işlemi başarılıysa true, aksi halde false döner
+     * @param ogrenciNo Silinecek öğrenci numarası
+     * @return Başarılıysa true
      */
     public boolean ogrenciSil(int ogrenciNo) {
         Ogrenci ogrenci = ogrenciAra(ogrenciNo);
         if (ogrenci == null) {
             return false;
         }
-
         ogrenciler.remove(ogrenci);
         return true;
     }
@@ -65,8 +75,8 @@ public class OgrenciService {
     /**
      * Öğrenci numarasına göre öğrenci arar.
      *
-     * @param ogrenciNo Aranacak öğrencinin numarası
-     * @return Öğrenci bulunursa Ogrenci nesnesi, bulunamazsa null döner
+     * @param ogrenciNo Aranacak numara
+     * @return Ogrenci nesnesi veya null
      */
     public Ogrenci ogrenciAra(int ogrenciNo) {
         for (Ogrenci ogrenci : ogrenciler) {
@@ -78,43 +88,38 @@ public class OgrenciService {
     }
 
     /**
-     * Sistemdeki tüm öğrencileri listeler.
+     * Tüm öğrencileri listeler.
      *
-     * @return Öğrenci listesini döndürür
+     * @return Öğrenci listesi
      */
     public List<Ogrenci> ogrenciListele() {
         return ogrenciler;
     }
 
     /**
-     * Verilen öğrenci numarasına sahip bir öğrenci sistemde var mı kontrol eder.
+     * Öğrenci var mı kontrolü.
      *
-     * @param ogrenciNo Kontrol edilecek öğrenci numarası
-     * @return Öğrenci varsa true, yoksa false döner
+     * @param ogrenciNo Kontrol edilecek numara
+     * @return Varsa true
      */
     public boolean ogrenciVarMi(int ogrenciNo) {
         return ogrenciAra(ogrenciNo) != null;
     }
 
     /**
-     * Var olan bir öğrencinin isim ve soyisim bilgilerini günceller.
-     * Öğrenci numarası değiştirilemez kabul edilmiştir.
+     * Öğrenci bilgilerini günceller.
      *
-     * @param ogrenci Güncellenmiş bilgileri içeren öğrenci nesnesi
-     * @return Güncelleme başarılıysa true, aksi halde false döner
+     * @param ogrenci Güncellenmiş öğrenci
+     * @return Başarılıysa true
      */
     public boolean ogrenciGuncelle(Ogrenci ogrenci) {
-        if (ogrenci == null) {
+        Ogrenci eski = ogrenciAra(ogrenci.getOgrenciNo());
+        if (eski == null) {
             return false;
         }
 
-        Ogrenci eskiOgrenci = ogrenciAra(ogrenci.getOgrenciNo());
-        if (eskiOgrenci == null) {
-            return false;
-        }
-
-        eskiOgrenci.setIsim(ogrenci.getIsim());
-        eskiOgrenci.setSoyisim(ogrenci.getSoyisim());
+        eski.setIsim(ogrenci.getIsim());
+        eski.setSoyisim(ogrenci.getSoyisim());
         return true;
     }
 }

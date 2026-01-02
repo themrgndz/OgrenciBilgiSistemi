@@ -10,8 +10,7 @@ import Util.InputUtil;
 /**
  * Programın ana menüsünü yöneten sınıf.
  * <p>
- * Kullanıcıya Bölüm, Öğrenci, Ders ve Not/GPA işlemleri için
- * seçenekler sunar. Seçilen menüye göre ilgili alt menü başlatılır.
+ * Kullanıcıya Bölüm, Öğrenci, Ders ve Not/GPA işlemleri için seçenekler sunar. Seçilen menüye göre ilgili alt menü başlatılır.
  * Kullanıcı "son" yazarak programı sonlandırabilir.
  * </p>
  */

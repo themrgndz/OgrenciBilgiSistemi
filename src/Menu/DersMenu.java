@@ -86,7 +86,7 @@ public class DersMenu {
     private void dersEkle() {
         boolean devamEt = true;
         while (devamEt) {
-            String ad = InputUtil.readString("Ders Adı: ");
+            String ad = InputUtil.readOnlyText("Ders Adı: ");
             String kod = InputUtil.readString("Ders Kodu: ");
             int akts = InputUtil.readInt("AKTS: ");
 

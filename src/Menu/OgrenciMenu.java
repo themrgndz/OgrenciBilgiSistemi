@@ -93,8 +93,8 @@ public class OgrenciMenu {
                 return;
             }
 
-            String isim = InputUtil.readString("İsim: ");
-            String soyisim = InputUtil.readString("Soyisim: ");
+            String isim = InputUtil.readOnlyText("İsim: ");
+            String soyisim = InputUtil.readOnlyText("Soyisim: ");
             int no = InputUtil.readInt("Öğrenci No: ");
 
             // Numaralandırılmış Bölüm Seçimi

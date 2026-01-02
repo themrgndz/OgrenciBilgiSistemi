@@ -75,7 +75,7 @@ public class BolumMenu {
         System.out.println("\n--- Mevcut Bölümler ---");
         bolumListele();
 
-        String ad = InputUtil.readString("Bölüm adı: ");
+        String ad = InputUtil.readOnlyText("Bölüm adı: ");
         String web = InputUtil.readString("Web sayfası: ");
 
         LocalDate tarih;
