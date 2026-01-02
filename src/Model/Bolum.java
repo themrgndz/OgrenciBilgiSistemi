@@ -9,12 +9,10 @@ import java.time.LocalDate;
  * temel bilgileri saklar. Kuruluş tarihi nesne oluşturulduktan sonra
  * değiştirilemez (immutable) yapıdadır.
  * </p>
- * * @author kral
- * @version 1.0
  */
 public class Bolum {
 
-    /** Bölümün tam adı (Örn: Bilgisayar Mühendisliği) */
+    /** Bölümün tam adı */
     private String ad;
     /** Bölümün resmi internet adresi */
     private String webSayfasi;

@@ -20,8 +20,6 @@ import java.util.List;
  * Bu sınıf; öğrencilere not atanması, mevcut notların güncellenmesi, tekil veya toplu
  * GPA hesaplamaları ve sonuçların dosyaya yazdırılması gibi işlevleri koordine eder.
  * </p>
- * * @author kral
- * @version 1.0
  */
 public class GpaMenu {
 

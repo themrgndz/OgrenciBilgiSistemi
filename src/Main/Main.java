@@ -17,7 +17,7 @@ public class Main {
     /**
      * Programın başlangıç metodu.
      * <p>
-     * Servis katmanlarını başlatır ve AnaMenu'yi çalıştırır.
+     * Servis katmanlarını başlatır ve AnaMenu'yü çalıştırır.
      * </p>
      */
     public static void main(String[] args) {

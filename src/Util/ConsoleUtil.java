@@ -6,8 +6,6 @@ package Util;
  * Bu sınıf; başlık yazdırma, ayırıcı çizgi oluşturma ve kullanıcıdan onay (Enter) bekleme
  * gibi ekran düzenleyici fonksiyonları static metodlar olarak sunar.
  * </p>
- * @author kral
- * @version 1.0
  */
 public class ConsoleUtil {
     /**
@@ -31,10 +29,8 @@ public class ConsoleUtil {
     public static void waitForEnter() {
         System.out.println("\nDevam etmek için Enter'a bas...");
         try {
-            // Kullanıcının bir karakter girmesini bekler (genellikle Enter)
             System.in.read();
         } catch (Exception ignored) {
-            // Hata durumunda akışın bozulmaması için boş bırakılmıştır
         }
     }
 }

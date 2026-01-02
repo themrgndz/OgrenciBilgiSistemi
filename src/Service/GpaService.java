@@ -13,8 +13,6 @@ import java.util.List;
  * ve derslerin AKTS değerleri kullanılarak ağırlıklı genel not ortalamasının hesaplanması
  * işlemlerini gerçekleştirir.
  * </p>
- * @author kral
- * @version 1.0
  */
 public class GpaService {
 

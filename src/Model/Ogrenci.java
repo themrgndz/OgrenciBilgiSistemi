@@ -9,8 +9,6 @@ import java.time.LocalDate;
  * benzersiz öğrenci numarasını ve akademik olarak bağlı olduğu {@link Bolum}
  * nesnesini saklar.
  * </p>
- * @author kral
- * @version 1.0
  */
 public class Ogrenci {
 

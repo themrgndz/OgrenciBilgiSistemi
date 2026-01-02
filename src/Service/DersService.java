@@ -12,8 +12,6 @@ import java.util.List;
  * Veri bütünlüğünü sağlamak için AKTS değerinin pozitifliği ve ders kodunun
  * benzersizliği gibi kritik kontrolleri gerçekleştirir.
  * </p>
- * @author kral
- * @version 1.0
  */
 public class DersService {
 

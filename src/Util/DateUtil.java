@@ -11,8 +11,6 @@ import java.time.format.DateTimeParseException;
  * girilen tarihlerin mantıksal olarak doğrulanması ve tarihlerin kullanıcıya
  * gösterilecek formatta metne dönüştürülmesi işlemlerini yapar.
  * </p>
- * @author kral
- * @version 1.0
  */
 public class DateUtil {
 
@@ -23,8 +21,8 @@ public class DateUtil {
     /**
      * Kullanıcıdan alınan metin formatındaki tarihi LocalDate nesnesine dönüştürür.
      *
-     * @param input Kullanıcının girdiği tarih metni (Örn: 15.05.2000).
-     * @return Dönüştürme başarılıysa {@link LocalDate} nesnesi, format hatalıysa null.
+     * @param input Kullanıcının girdiği tarih metni
+     * @return Dönüştürme başarılıysa {@link LocalDate} nesnesi
      */
     public static LocalDate parseDate(String input) {
         try {

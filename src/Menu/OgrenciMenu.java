@@ -15,12 +15,10 @@ import java.util.List;
 /**
  * Öğrenci işlemlerine ait kullanıcı arayüzünü (alt menü) yöneten sınıf.
  * <p>
- * Bu sınıf aracılığıyla kullanıcı; sisteme yeni öğrenciler ekleyebilir (CRUD),
+ * Bu sınıf aracılığıyla kullanıcı; sisteme yeni öğrenciler ekleyebilir,
  * mevcut öğrenci bilgilerini güncelleyebilir, öğrenci silebilir veya arama yapabilir.
  * Bölüm seçimi sistemdeki mevcut bölümler üzerinden numaralandırılmış bir liste ile yapılır.
  * </p>
- * @author kral
- * @version 1.0
  */
 public class OgrenciMenu {
 
@@ -32,7 +30,7 @@ public class OgrenciMenu {
     private final GpaService gpaService;
 
     /**
-     * OgrenciMenu nesnesi oluşturur ve gerekli servis bağımlılıklarını enjekte eder.
+     * OgrenciMenu nesnesi oluşturur ve gerekli servisleri aktarır.
      *
      * @param ogrenciService Öğrenci işlemlerini yöneten servis katmanı.
      * @param bolumService   Bölüm verilerine erişim sağlayan servis katmanı.

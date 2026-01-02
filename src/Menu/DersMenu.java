@@ -14,8 +14,6 @@ import java.util.List;
  * mevcut dersleri silebilir ve kayıtlı tüm dersleri listeleyebilir.
  * Tüm işlemler {@link DersService} katmanı üzerinden gerçekleştirilir.
  * </p>
- * * @author kral
- * @version 1.0
  */
 public class DersMenu {
 
@@ -25,7 +23,7 @@ public class DersMenu {
     private final DersService dersService;
 
     /**
-     * DersMenu nesnesi oluşturur ve gerekli servis bağımlılığını enjekte eder.
+     * DersMenu nesnesi oluşturur ve gerekli servis ile bağlantı kurar.
      *
      * @param dersService Ders işlemlerini yöneten servis katmanı.
      */

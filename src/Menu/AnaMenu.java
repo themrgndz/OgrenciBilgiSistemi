@@ -11,8 +11,7 @@ import Util.InputUtil;
  * Programın ana kullanıcı arayüzünü (konsol menüsü) yöneten sınıf.
  * <p>
  * Bu sınıf, kullanıcıya Bölüm, Öğrenci, Ders ve Not/GPA işlemlerine erişim sağlayan
- * merkezi bir kontrol noktası sunar. Kullanıcının girdiği komutlara göre ilgili
- * alt menüleri (BolumMenu, OgrenciMenu vb.) başlatır.
+ * merkezi bir kontrol noktası sunar. Kullanıcının girdiği komutlara göre ilgili alt menüleri (BolumMenu, OgrenciMenu vb.) başlatır.
  * </p>
  */
 public class AnaMenu {
@@ -23,7 +22,7 @@ public class AnaMenu {
     private final GpaService gpaService;
 
     /**
-     * AnaMenu nesnesi oluşturur ve gerekli servisleri enjekte eder.
+     * AnaMenu nesnesi oluşturur ve gerekli servisleri iletir.
      *
      * @param ogrenciService Öğrenci verileri ve mantığını yöneten servis.
      * @param dersService    Ders verileri ve mantığını yöneten servis.
@@ -56,8 +55,7 @@ public class AnaMenu {
     /**
      * Ana menü döngüsünü başlatır.
      * <p>
-     * Kullanıcı "son" yazana kadar döngü devam eder. Kullanıcıdan alınan girdiler
-     * doğrultusunda ilgili servislerin menü sınıfları örneklenir ve çalıştırılır.
+     * Kullanıcı "son" yazana kadar döngü devam eder. Kullanıcının girdiği değerlere göre alt menülere yönlendirir.
      * Geçersiz sayısal girişler veya metin girişleri için hata mesajı gösterir.
      * </p>
      */
@@ -67,7 +65,6 @@ public class AnaMenu {
 
             String secim = InputUtil.readString("Seçiminiz: ");
 
-            // Çıkış kontrolü
             if (secim.equalsIgnoreCase("son")) {
                 System.out.println("Program sonlandırılıyor... Güle güle kral 👋");
                 return;
@@ -93,7 +90,7 @@ public class AnaMenu {
                         System.out.println("Geçersiz seçim! Lütfen listedeki rakamlardan birini giriniz.");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Hata: Lütfen geçerli bir seçim (rakam veya 'son') yapınız!");
+                System.out.println("Hata: Lütfen geçerli bir seçim yapınız!");
             }
 
             ConsoleUtil.waitForEnter();

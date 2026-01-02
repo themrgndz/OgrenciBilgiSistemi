@@ -16,8 +16,6 @@ import java.util.List;
  * Bu sınıf aracılığıyla kullanıcı; sisteme yeni bölümler ekleyebilir,
  * mevcut bölümleri silebilir veya tüm bölümleri listeleyebilir.
  * </p>
- * * @author kral
- * @version 1.0
  */
 public class BolumMenu {
 
@@ -28,7 +26,7 @@ public class BolumMenu {
      * BolumMenu nesnesi oluşturur.
      *
      * @param bolumService   Bölüm verilerini yöneten servis.
-     * @param ogrenciService Öğrenci kontrolü (silme işlemi için) yapan servis.
+     * @param ogrenciService Öğrenci kontrolü yapan servis.
      */
     public BolumMenu(BolumService bolumService, OgrenciService ogrenciService) {
         this.bolumService = bolumService;
@@ -95,7 +93,7 @@ public class BolumMenu {
      * Kullanıcıdan alınan bilgilerle sisteme yeni bir bölüm ekler.
      * <p>
      * Bölüm adı ve web sayfası bilgilerini aldıktan sonra, kuruluş tarihi için
-     * {@link DateUtil} kullanarak format ve mantıklılık (gelecek tarih olmaması vb.) kontrolü yapar.
+     * {@link DateUtil} kullanarak format sorunu ve mantık hatalarının olmaması sağlanır. (01.01.2099 yılında doğmuş biri gibi)
      * </p>
      */
     private void bolumEkle() {
@@ -129,7 +127,7 @@ public class BolumMenu {
     }
 
     /**
-     * Belirtilen bir bölümü sistemden siler.
+     * Belirtilen bölümü sistemden siler.
      * <p>
      * Silme işleminden önce, ilgili bölüme kayıtlı öğrenci olup olmadığını kontrol eder.
      * Eğer bölüme bağlı öğrenciler varsa, veri bütünlüğünü korumak adına silme işlemine izin vermez.
@@ -138,7 +136,6 @@ public class BolumMenu {
     private void bolumSil() {
         String ad = InputUtil.readString("Silinecek bölüm adı: ");
 
-        // Veri bütünlüğü kontrolü: Bölüme kayıtlı öğrenci var mı?
         boolean ogrenciVarMi = ogrenciService.ogrenciListele().stream()
                 .anyMatch(o -> o.getBolum().getAd().equalsIgnoreCase(ad));
 

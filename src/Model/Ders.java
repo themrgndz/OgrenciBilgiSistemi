@@ -7,14 +7,12 @@ package Model;
  * değerini saklar. Sistemdeki not hesaplamaları bu sınıftaki AKTS değerleri
  * üzerinden gerçekleştirilir.
  * </p>
- * @author kral
- * @version 1.0
  */
 public class Ders {
 
-    /** Dersin tam adı (Örn: Nesne Yönelimli Programlama) */
+    /** Dersin tam adı*/
     private String ad;
-    /** Dersin benzersiz kodu (Örn: NYP101) */
+    /** Dersin benzersiz kodu */
     private final String kod;
     /** Dersin AKTS kredi değeri */
     private final int akts;
@@ -23,7 +21,7 @@ public class Ders {
      * Yeni bir Ders nesnesi oluşturur.
      *
      * @param ad   Dersin adı
-     * @param kod  Dersin benzersiz kodu (örn: Java445)
+     * @param kod  Dersin benzersiz kodu
      * @param akts Dersin AKTS kredi değeri
      */
     public Ders(String ad, String kod, int akts){

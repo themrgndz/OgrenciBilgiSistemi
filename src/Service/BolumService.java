@@ -11,8 +11,6 @@ import java.util.List;
  * bilgilerinin güncellenmesi gibi operasyonları merkezi bir noktadan yönetir.
  * Veri tutarlılığını sağlamak için isim kontrolü gibi doğrulamaları gerçekleştirir.
  * </p>
- * @author kral
- * @version 1.0
  */
 public class BolumService {
 

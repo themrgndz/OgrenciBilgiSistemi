@@ -7,12 +7,10 @@ import java.util.List;
 /**
  * Öğrenci kayıtları ve bu kayıtlar üzerindeki iş mantığını yöneten servis sınıfıdır.
  * <p>
- * Bu sınıf; yeni öğrenci ekleme (9 haneli numara kontrolü ile), öğrenci silme,
+ * Bu sınıf; yeni öğrenci ekleme, öğrenci silme,
  * numara ile arama, tüm öğrencileri listeleme ve mevcut öğrenci bilgilerini
  * güncelleme işlemlerini koordine eder.
  * </p>
- * @author kral
- * @version 1.0
  */
 public class OgrenciService {
 
