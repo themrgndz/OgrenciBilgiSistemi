@@ -114,7 +114,23 @@ public class GpaService {
         }
         return false;
     }
-
+    /**
+     * 0-100 arasındaki sayısal notu harf notuna dönüştürür.
+     *
+     * @param puan Kullanıcının girdiği sayısal not.
+     * @return Harf notu karşılığı.
+     */
+    public String puaniHarfeCevir(int puan) {
+        if (puan >= 90) return "AA";
+        if (puan >= 85) return "BA";
+        if (puan >= 80) return "BB";
+        if (puan >= 75) return "CB";
+        if (puan >= 70) return "CC";
+        if (puan >= 65) return "DC";
+        if (puan >= 60) return "DD";
+        if (puan >= 50) return "FD";
+        return "FF";
+    }
     /**
      * Öğrencinin aldığı tüm derslerin AKTS ağırlıklı genel not ortalamasını hesaplar.
      * <p>

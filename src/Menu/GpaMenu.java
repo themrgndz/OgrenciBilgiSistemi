@@ -132,11 +132,19 @@ public class GpaMenu {
             return;
         }
 
-        String harfNotu = InputUtil.readString("Harf Notu (AA, BA, BB...): ");
+        int puan;
+        while (true) {
+            puan = InputUtil.readInt("Öğrenci Notu (0-100): ");
+            if (puan >= 0 && puan <= 100) break;
+            System.out.println("Hata: Lütfen 0 ile 100 arasında bir değer giriniz!");
+        }
+
+        String harfNotu = gpaService.puaniHarfeCevir(puan);
+
         if (gpaService.notEkle(ogrenci, ders, harfNotu)) {
-            System.out.println("Not başarıyla sisteme eklendi.");
+            System.out.println("Not başarıyla hesaplandı (" + harfNotu + ") ve sisteme eklendi.");
         } else {
-            System.out.println("Hata: Not eklenemedi (Harf notu geçersiz veya kayıt zaten mevcut).");
+            System.out.println("Hata: Not eklenemedi (Kayıt zaten mevcut olabilir).");
         }
     }
 

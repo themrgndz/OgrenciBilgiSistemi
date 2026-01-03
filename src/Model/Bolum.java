@@ -16,7 +16,7 @@ public class Bolum {
     private String ad;
     /** Bölümün resmi internet adresi */
     private String webSayfasi;
-    /** Bölümün resmi kuruluş tarihi (Değiştirilemez) */
+    /** Bölümün resmi kuruluş tarihi */
     private final LocalDate kurulusTarihi;
 
     /**
@@ -45,15 +45,6 @@ public class Bolum {
      */
     public String getWebSayfasi() {
         return webSayfasi;
-    }
-
-    /**
-     * Bölümün web sitesi adresini günceller.
-     *
-     * @param webSayfasi Yeni web sitesi adresi
-     */
-    public void setWebSayfasi(String webSayfasi) {
-        this.webSayfasi = webSayfasi;
     }
 
     /**
